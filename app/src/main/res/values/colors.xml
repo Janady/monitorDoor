@@ -74,4 +74,8 @@
     <color name="hint_color">#818181</color>
     <color name="whitebg_text">#666666</color>
     <color name="light_gray">#c5c5c5</color>
+
+
+    <!-- qmui -->
+    <color name="app_color_blue">#00A8E1</color>
 </resources>

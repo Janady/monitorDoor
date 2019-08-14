@@ -47,7 +47,11 @@ public abstract class ActivityGuide extends ActivityDemo implements OnItemClickL
 			mBtnBack.setVisibility(View.GONE);
 		}
 	}
-	
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+	}
 
 	@Override
 	protected void onDestroy() {

@@ -36,16 +36,21 @@ public class ActivityStartup extends FragmentActivity implements OnFunLoginListe
 		
 		// 启动局域网报警功能
 		// startLanAlarmNotification();
-		
-		// 最小延时2秒打开主界面
-		mHandler.sendEmptyMessageDelayed(MESSAGE_ENTER_MAINMENU, 2000);
+
 		
 		// 监听用户登录/登出时间
 		FunSupport.getInstance().registerOnFunLoginListener(this);
-		
+
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		// 最小延时2秒打开主界面
+		mHandler.sendEmptyMessageDelayed(MESSAGE_ENTER_MAINMENU, 2000);
 		// 尝试登录上一次成功登录的自动登录
 		if ( !FunSupport.getInstance().getAutoLogin()
-						|| !FunSupport.getInstance().loginByLastUser() ) {
+				|| !FunSupport.getInstance().loginByLastUser() ) {
 			// 之前没有账号成功登录或者没有设置为自动登录,结束登录流程
 			mHandler.sendEmptyMessage(MESSAGE_LOGIN_FUNISHED);
 		}

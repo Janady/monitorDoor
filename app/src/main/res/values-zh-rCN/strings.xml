@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">FunSDKDemo</string>
+    <string name="app_name">智能门控</string>
     <string name="app_welcome">欢迎使用智能门控系统！\n@2019，易叮科技</string>
     <string name="common_confirm">确定</string>
     <string name="common_cancel">取消</string>

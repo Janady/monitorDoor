@@ -38,4 +38,7 @@
     <dimen name="to_small_text_size">12sp</dimen>
     <dimen name="super_small_text_size">7sp</dimen>
     <dimen name="big_text_size">22sp</dimen>
+
+    <!-- for QMUI -->
+    <dimen name="home_tab_height">49dp</dimen>
 </resources>
