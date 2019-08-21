@@ -18,7 +18,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="106dp"
-                android:background="#ffffffff"
+                android:background="@drawable/layout_border"
                 android:orientation="vertical" >
 
                 <ImageView

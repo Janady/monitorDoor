@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qmuiteam.qmui.widget.QMUIWindowInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_gray">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/qmui_topbar_height"
+        android:background="@color/bg_gray"
+        android:fitsSystemWindows="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="106dp"
+            android:background="@drawable/layout_border"
+            android:orientation="vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" >
+
+            <ImageView
+                android:id="@+id/userLoginUserNameIcon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="20dp"
+                android:padding="2dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_wifi" />
+            <EditText
+                android:id="@+id/editWifiSSID"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:layout_alignBottom="@id/userLoginUserNameIcon"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/userLoginUserNameIcon"
+                android:background="#00000000"
+                android:gravity="center_vertical"
+                android:hint="@string/device_opt_set_wifi_hint_ssid"
+                android:singleLine="true"
+                android:textColor="#ff101010"
+                android:textColorHint="#ffe0e0e0"
+                android:textSize="16dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignLeft="@id/userLoginUserNameIcon"
+                android:layout_below="@id/userLoginUserNameIcon"
+                android:layout_marginLeft="36dp"
+                android:layout_marginRight="32dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/app_color_blue" />
+
+            <ImageView
+                android:id="@+id/userLoginPasswdIcon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignLeft="@id/userLoginUserNameIcon"
+                android:layout_below="@id/userLoginUserNameIcon"
+                android:layout_marginTop="16dp"
+                android:padding="2dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_password" />
+
+            <EditText
+                android:id="@+id/editWifiPasswd"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:layout_alignBottom="@id/userLoginPasswdIcon"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/userLoginPasswdIcon"
+                android:background="#00000000"
+                android:gravity="center_vertical"
+                android:hint="@string/device_opt_set_wifi_hint_passwd"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textColor="#ff101010"
+                android:textColorHint="#ffe0e0e0"
+                android:textSize="16dp" />
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="connect tips!"
+                android:layout_gravity="center"/>
+            <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+                android:id="@+id/ok_button"
+                style="@style/QMUI.RoundButton"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="51dp"
+                android:layout_marginRight="51dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/white"
+                app:qmui_backgroundColor="@color/app_color_blue"
+
+                android:text="@string/Ok" />
+        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+
+    <com.qmuiteam.qmui.widget.QMUITopBarLayout
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"/>
+
+</com.qmuiteam.qmui.widget.QMUIWindowInsetLayout>

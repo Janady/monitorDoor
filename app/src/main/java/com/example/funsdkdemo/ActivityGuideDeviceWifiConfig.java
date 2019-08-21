@@ -189,7 +189,7 @@ public class ActivityGuideDeviceWifiConfig extends ActivityDemo implements OnCli
 
 	private String getConnectWifiSSID() {
 		try {
-			WifiManager wifimanage=(WifiManager)getSystemService(Context.WIFI_SERVICE);
+			WifiManager wifimanage=(WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 			return wifimanage.getConnectionInfo().getSSID().replace("\"", "");
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -153,4 +153,12 @@
         <item name="android:background">?attr/qmui_s_list_item_bg_with_border_bottom_inset_left
         </item>
     </style>
+
+    <style name="button_wrapper_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">24dp</item>
+        <item name="android:paddingBottom">24dp</item>
+        <item name="android:background">@drawable/qmui_divider_bottom_bitmap</item>
+    </style>
 </resources>

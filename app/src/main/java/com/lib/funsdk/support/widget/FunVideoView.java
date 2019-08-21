@@ -9,6 +9,7 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.opengl.GLSurfaceView;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -294,7 +295,6 @@ public class FunVideoView extends LinearLayout implements IFunSDKResult {
 		} else {
 			playUrl = "real://" + devSn;
 		}
-		
 		mDeviceSn = devSn;
 		setVideoPath(playUrl);
 	}

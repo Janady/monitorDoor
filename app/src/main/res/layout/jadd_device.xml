@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qmuiteam.qmui.widget.QMUIWindowInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_gray">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/qmui_topbar_height"
+        android:background="@color/qmui_config_color_background"
+        android:fitsSystemWindows="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/qmui_content_spacing_horizontal"
+            android:paddingRight="@dimen/qmui_content_spacing_horizontal">
+            <RelativeLayout style="@style/button_wrapper_style">
+                <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+                    android:id="@+id/fast_config_button"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_centerInParent="true"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="快速配置"
+                    android:textSize="25sp"
+                    android:textColor="@color/white"
+                    app:qmui_backgroundColor="@color/app_color_blue"
+                    app:qmui_borderColor="@color/s_app_color_gray"
+                    app:qmui_borderWidth="10dp"/>
+            </RelativeLayout>
+
+            <RelativeLayout style="@style/button_wrapper_style">
+                <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+                    android:id="@+id/share_device_button"
+                    style="@style/QMUI.RoundButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="连接分享的摄像机"
+                    android:layout_marginLeft="51dp"
+                    android:layout_marginRight="51dp"
+                    android:layout_marginTop="10dp" />
+            </RelativeLayout>
+            <RelativeLayout style="@style/button_wrapper_style">
+                <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+                    android:id="@+id/ok_button"
+                    style="@style/QMUI.RoundButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="同一路由器上的设备"
+                    android:layout_marginLeft="51dp"
+                    android:layout_marginRight="51dp"
+                    android:layout_marginTop="10dp" />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
+    <com.qmuiteam.qmui.widget.QMUITopBarLayout
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"/>
+</com.qmuiteam.qmui.widget.QMUIWindowInsetLayout>
