@@ -7,14 +7,19 @@ import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.opengl.GLSurfaceView;
+import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.basic.G;
+import com.janady.Util;
 import com.lib.EFUN_ATTR;
 import com.lib.EUIMSG;
 import com.lib.FunSDK;
@@ -50,11 +55,11 @@ public class FunVideoView extends LinearLayout implements IFunSDKResult {
 
 	private final String TAG = "FunVideoView";
 	
-	private final int STAT_STOPPED = 0;
-	private final int STAT_PLAYING = 1;
-	private final int STAT_PAUSED = 2;
-	
-	private int mPlayStat = STAT_STOPPED;
+	protected final int STAT_STOPPED = 0;
+	protected final int STAT_PLAYING = 1;
+	protected final int STAT_PAUSED = 2;
+
+	protected int currentState = STAT_STOPPED;
 	private FunStreamType mStreamType = FunStreamType.STREAM_SECONDARY;
 	private String mVideoUrl = null;
     private H264_DVR_FILE_DATA mVideoFile = null;
@@ -111,7 +116,51 @@ public class FunVideoView extends LinearLayout implements IFunSDKResult {
         mContext = context;
 		init();
 	}
-	
+
+
+	//设置播放状态
+	private void setStateAndMode(final int status) {
+		if (Looper.getMainLooper() == Looper.myLooper())
+			setUIWithStateAndMode(status);
+		else
+			post(new Runnable() {
+				@Override
+				public void run() {
+					setUIWithStateAndMode(status);
+				}
+			});
+	}
+
+	protected void setUIWithStateAndMode(final int status) {
+		Log.e(TAG, "status:" + status);
+		if (status == STAT_PLAYING)
+			Util.KEEP_SCREEN_ON(getContext());
+		else
+			Util.KEEP_SCREEN_OFF(getContext());
+
+		final int temp_status = this.currentState;
+		this.currentState = status;
+//		if (temp_status != status)
+//			handlePlayListener.onStatus(status);
+//		if (temp_mode != mode)
+//			handlePlayListener.onMode(mode);
+	}
+
+	protected void clickPlay() {
+		if (currentState == STAT_STOPPED) {
+			if (!Util.isWifiConnected(getContext())) {
+				showWifiDialog();
+			}
+			resume();
+		} else if (currentState == STAT_PLAYING) {
+			pause();
+		} else if (currentState == STAT_PAUSED) {
+			resume();
+		}
+	}
+	protected boolean showWifiDialog() {
+		return false;
+	}
 	public void setOnPreparedListener(OnPreparedListener listener) {
 		mPreparedListener = listener;
 	}
@@ -140,6 +189,43 @@ public class FunVideoView extends LinearLayout implements IFunSDKResult {
             
             mIsPlaying = false;
         }
+        setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				float x = event.getX();
+				float y = event.getY();
+				if (gestureMoveLen == 0)
+					gestureMoveLen = ViewConfiguration.get(v.getContext()).getScaledTouchSlop() + 30;
+				switch (event.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						gestureX = x;
+						gestureY = y;
+						break;
+					case MotionEvent.ACTION_MOVE:
+						float deltaX = x - gestureX;
+						float deltaY = y - gestureY;
+						Log.d("zyk", " >> onTouch "+deltaX+"-"+deltaY);
+						if (gestureListner == null) return false;
+						if (Math.abs(deltaX) > gestureMoveLen) {
+							if (deltaX > 0) gestureListner.onGestureRight();
+							else gestureListner.onGestureLeft();
+							gestureX = x;
+						}
+						if (Math.abs(deltaY) > gestureMoveLen) {
+							if (deltaY > 0) gestureListner.onGestureDown();
+							else gestureListner.onGestureUp();
+							gestureY = y;
+						}
+						break;
+					case MotionEvent.ACTION_UP:
+					case MotionEvent.ACTION_CANCEL:
+						if (gestureListner != null) gestureListner.onGestureStop();
+						break;
+
+				}
+				return true;
+			}
+		});
 	}
 	
 	private void initSurfaceView() {
@@ -271,13 +357,13 @@ public class FunVideoView extends LinearLayout implements IFunSDKResult {
 	 */
 	public void setVideoPath(String path) {
 		mVideoUrl = path;
-		mPlayStat = STAT_PLAYING;
+		setStateAndMode(STAT_PLAYING);
 		openVideo();
 	}
 
 	public void getYuvData(OnYUVDataListener listener) {
 		mOnYUVDataListener = listener;
-		mPlayStat = STAT_PLAYING;
+		setStateAndMode(STAT_PLAYING);
 		mIsGetYUVData = true;
 		openVideo();
 	}
@@ -348,8 +434,8 @@ public class FunVideoView extends LinearLayout implements IFunSDKResult {
 		if ( isPlaying() ) {
 			FunSDK.MediaPause(mPlayerHandler, 1, 0);
 		}
-		
-		mPlayStat = STAT_PAUSED;
+
+		setStateAndMode(STAT_PAUSED);
 	}
 	
 	public void resume() {
@@ -376,7 +462,7 @@ public class FunVideoView extends LinearLayout implements IFunSDKResult {
 	 * @return
 	 */
 	public boolean isPaused() {
-		return (mPlayStat == STAT_PAUSED);
+		return (currentState == STAT_PAUSED);
 	}
 	
 	/**
@@ -384,7 +470,7 @@ public class FunVideoView extends LinearLayout implements IFunSDKResult {
 	 * @return
 	 */
 	public boolean isPlaying() {
-		return (mPlayStat == STAT_PLAYING && mInited && mPlayerHandler != 0 );
+		return (currentState == STAT_PLAYING && mInited && mPlayerHandler != 0 );
 	}
 	
 	/**
@@ -433,7 +519,7 @@ public class FunVideoView extends LinearLayout implements IFunSDKResult {
 	private void openVideo() {
 		if ( !mInited
 				|| null == mVideoUrl 
-				|| mPlayStat != STAT_PLAYING
+				|| currentState != STAT_PLAYING
 				|| null == mSufaceView ) {
 			return;
 		}
@@ -530,7 +616,7 @@ public class FunVideoView extends LinearLayout implements IFunSDKResult {
         	
             mInited = true;
             
-            if ( mPlayStat == STAT_PLAYING
+            if ( currentState == STAT_PLAYING
                     && null != mVideoUrl ) {
                 openVideo();
             }
@@ -551,66 +637,82 @@ public class FunVideoView extends LinearLayout implements IFunSDKResult {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		// TODO Auto-generated method stub
+		Log.d("zyk", " >> onTouchEvent");
 		return super.onTouchEvent(event);
 	}
 	
 	@Override
 	public void setOnTouchListener(OnTouchListener l) {
 		// TODO Auto-generated method stub
+		Log.d("zyk", " >> setOnTouchListener");
 		mOnTouchListener = l;
 		super.setOnTouchListener(l);
 	}
-	
-	//here to intercept evention by some condition, to show or hide the button bar
-	@Override  
-    public boolean onInterceptTouchEvent(MotionEvent ev) {  
-        // TODO Auto-generated method stub  
-          
-          
-        int deltaX = 0;
-        int deltaY = 0;
-        long deltime = 0;
-        int count = ev.getPointerCount();
-        long times = ev.getEventTime();
-        final float x = ev.getX();
-        final float y = ev.getY();
-  
-        switch (ev.getAction()) {  
-        case MotionEvent.ACTION_MOVE:
-			fingerTouchMove(fistXLocation,fistYlocation,x,y);
-            return super.onInterceptTouchEvent(ev);
-        case MotionEvent.ACTION_DOWN:
-			fistXLocation = x;
-            fistYlocation = y;
-            time = ev.getDownTime();
-            if(getScaleY()<-400){
-                System.out.println(getScaleY());
-            }
 
-            return  super.onInterceptTouchEvent(ev);
-  
-        case MotionEvent.ACTION_CANCEL:  
-        case MotionEvent.ACTION_UP:  
-        	System.out.println("TTTT-----ActionUP");
-        	deltaX = (int)(fistXLocation - x);
-            deltaY = (int)(fistYlocation - y);
-            deltime = times - time;
-            if (count == 1) {
-				if (deltime < 100) {
-	            	if (Math.abs(deltaY) < LENTH
-	            			&& Math.abs(deltaX) < LENTH) {
-	            		if (mOnTouchListener != null) {
-	            			mOnTouchListener.onTouch(this, ev);
-						}
-	            	}  
-				}
-            }
-            break;
-        default:
-            break;
-        }
-      return super.onInterceptTouchEvent(ev);  
-    }  
+	private float gestureX = 0;
+	private float gestureY = 0;
+	private int gestureMoveLen = 0;
+	private GestureListner gestureListner;
+	public void setGestureListner(GestureListner gestureListner) {
+		this.gestureListner = gestureListner;
+	}
+
+	public interface GestureListner {
+		void onGestureRight();
+		void onGestureLeft();
+		void onGestureUp();
+		void onGestureDown();
+		void onGestureStop();
+	}
+	//here to intercept evention by some condition, to show or hide the button bar
+	@Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        // TODO Auto-generated method stub
+
+//        int deltaX = 0;
+//        int deltaY = 0;
+//        long deltime = 0;
+//        int count = ev.getPointerCount();
+//        long times = ev.getEventTime();
+//        final float x = ev.getX();
+//        final float y = ev.getY();
+//
+//        switch (ev.getAction()) {
+//        case MotionEvent.ACTION_MOVE:
+//			fingerTouchMove(fistXLocation,fistYlocation,x,y);
+//            return super.onInterceptTouchEvent(ev);
+//        case MotionEvent.ACTION_DOWN:
+//			fistXLocation = x;
+//            fistYlocation = y;
+//            time = ev.getDownTime();
+//            if(getScaleY()<-400){
+//                System.out.println(getScaleY());
+//            }
+//
+//            return  super.onInterceptTouchEvent(ev);
+//
+//        case MotionEvent.ACTION_CANCEL:
+//        case MotionEvent.ACTION_UP:
+//        	System.out.println("TTTT-----ActionUP");
+//        	deltaX = (int)(fistXLocation - x);
+//            deltaY = (int)(fistYlocation - y);
+//            deltime = times - time;
+//            if (count == 1) {
+//				if (deltime < 100) {
+//	            	if (Math.abs(deltaY) < LENTH
+//	            			&& Math.abs(deltaX) < LENTH) {
+//	            		if (mOnTouchListener != null) {
+//	            			mOnTouchListener.onTouch(this, ev);
+//						}
+//	            	}
+//				}
+//            }
+//            break;
+//        default:
+//            break;
+//        }
+      return true;
+    }
 
 
     public void setMediaSound(boolean bSound) {
@@ -638,6 +740,14 @@ public class FunVideoView extends LinearLayout implements IFunSDKResult {
 		return null;
 	}
 
+    /**
+     * 视频截图
+     * @param sn
+     */
+    public String captureCover(String sn) {
+        String path = FunPath.getCoverPath(sn);
+        return captureImage(path);
+    }
 	/**
 	 * 录制视频到指定文件
 	 * @param path

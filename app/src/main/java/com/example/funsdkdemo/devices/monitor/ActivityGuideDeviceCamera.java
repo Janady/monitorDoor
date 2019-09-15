@@ -1460,5 +1460,5 @@ public class ActivityGuideDeviceCamera
 	public void onDeviceFileListGetFailed(FunDevice funDevice) {
 		// TODO Auto-generated method stub
 		
-	}	
+	}
 }

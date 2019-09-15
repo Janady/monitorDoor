@@ -1,22 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="240dp"
+    android:layout_height="80dp"
     android:background="?attr/qmui_s_list_item_bg_with_border_none"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
-    <com.lib.funsdk.support.widget.FunVideoView
-        android:id="@+id/funVideoView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
+    <!--<com.lib.funsdk.support.widget.FunVideoView-->
+        <!--android:id="@+id/funVideoView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"/>-->
+    <ImageView
+        android:id="@+id/cover"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        tools:srcCompat="@color/demo_title"
+        tools:visibility="gone" />
     <TextView
-        android:id="@+id/item_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal|top"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:lines="2"
         android:textSize="14sp"
-        android:textColor="@color/white"/>
+        android:text="SN："
+        android:textColor="@color/app_color_blue"/>
+    <TextView
+        android:id="@+id/item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:lines="2"
+        android:textSize="14sp"
+        android:textColor="@color/record_alarm_color"/>
 </LinearLayout>

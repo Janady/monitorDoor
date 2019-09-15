@@ -292,6 +292,9 @@ public class FunPath {
         return FunPath.PATH_PHOTO + File.separator + "temp" + ".jpg";
     }
 
+	public static String getCoverPath(String id){
+		return FunPath.PATH_PHOTO + File.separator + id + ".jpg";
+	}
     public static String getRecordPath() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         String strDate = sdf.format(new Date());

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,7 +91,8 @@ public abstract class HomeController<T> extends QMUIWindowInsetLayout {
         mItemAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int pos) {
-
+                Log.d("zyk", " >> OnItemClickListener");
+                onItemClicked(pos);
             }
         });
         mRecyclerView.setAdapter(mItemAdapter);
@@ -100,6 +102,7 @@ public abstract class HomeController<T> extends QMUIWindowInsetLayout {
 
     protected abstract BaseRecyclerAdapter<T> getItemAdapter();
     protected abstract RecyclerView.LayoutManager getLayoutManager();
+    protected abstract void onItemClicked(int pos);
 
     public interface HomeControlListener {
         void startFragment(JBaseFragment fragment);

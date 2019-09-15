@@ -20,6 +20,7 @@ import com.qmuiteam.qmui.widget.QMUITopBarLayout;
 public class AddDeviceFragment extends JBaseFragment {
     private QMUITopBarLayout mTopBar;
     private Button fastBtn;
+    private Button lanBtn;
     @Override
     protected View onCreateView() {
         View root = LayoutInflater.from(getActivity()).inflate(R.layout.jadd_device, null);
@@ -32,7 +33,13 @@ public class AddDeviceFragment extends JBaseFragment {
                 startFragment(new WifiConfigFragment());
             }
         });
-
+        lanBtn = root.findViewById(R.id.lan_device);
+        lanBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startFragment(new DeviceLanFragment());
+            }
+        });
         initTopBar();
         return root;
     }
@@ -44,17 +51,17 @@ public class AddDeviceFragment extends JBaseFragment {
             }
         });
         mTopBar.setTitle(R.string.guide_module_title_device_setwifi);
-        mTopBar.addRightImageButton(R.drawable.ic_video_slowplay, R.id.topbar_add_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = new Intent();
-
-                intent.setClass(getContext(), ActivityGuideMain.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                startActivity(intent);
-            }
-        });
+//        mTopBar.addRightImageButton(R.drawable.ic_video_slowplay, R.id.topbar_add_button).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                Intent intent = new Intent();
+//
+//                intent.setClass(getContext(), ActivityGuideMain.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//
+//                startActivity(intent);
+//            }
+//        });
     }
 }

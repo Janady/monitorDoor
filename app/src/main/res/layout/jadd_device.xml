@@ -51,7 +51,7 @@
             </RelativeLayout>
             <RelativeLayout style="@style/button_wrapper_style">
                 <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
-                    android:id="@+id/ok_button"
+                    android:id="@+id/lan_device"
                     style="@style/QMUI.RoundButton"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"

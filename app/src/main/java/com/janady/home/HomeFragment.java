@@ -114,11 +114,11 @@ public class HomeFragment extends JBaseFragment {
         homeComponentsController.setHomeControlListener(listener);
         mPages.put(Pager.DEVICE, homeComponentsController);
 
-        HomeController homeUtilController = new HomeDeviceController(getActivity());
+        HomeController homeUtilController = new HomeStoreController(getActivity());
         homeUtilController.setHomeControlListener(listener);
         mPages.put(Pager.STORE, homeUtilController);
 
-        HomeController homeLabController = new HomeDeviceController(getActivity());
+        HomeController homeLabController = new HomeMeController(getActivity());
         homeLabController.setHomeControlListener(listener);
         mPages.put(Pager.MY, homeLabController);
 

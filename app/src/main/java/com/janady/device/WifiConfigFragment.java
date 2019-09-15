@@ -50,6 +50,7 @@ public class WifiConfigFragment extends JBaseFragment implements OnFunDeviceWiFi
     @Override
     public void onDestroy() {
         stopQuickSetting();
+        FunSupport.getInstance().removeOnFunDeviceWiFiConfigListener(this);
 
         super.onDestroy();
     }
