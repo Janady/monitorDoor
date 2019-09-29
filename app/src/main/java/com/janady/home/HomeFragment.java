@@ -83,19 +83,12 @@ public class HomeFragment extends JBaseFragment {
                 ContextCompat.getDrawable(getContext(), R.mipmap.icon_tabbar_component_selected),
                 "设备", false
         );
-
-        QMUITabSegment.Tab util = new QMUITabSegment.Tab(
-                ContextCompat.getDrawable(getContext(), R.mipmap.icon_tabbar_util),
-                ContextCompat.getDrawable(getContext(), R.mipmap.icon_tabbar_util_selected),
-                "存储", false
-        );
         QMUITabSegment.Tab lab = new QMUITabSegment.Tab(
                 ContextCompat.getDrawable(getContext(), R.mipmap.icon_tabbar_lab),
                 ContextCompat.getDrawable(getContext(), R.mipmap.icon_tabbar_lab_selected),
                 "我的", false
         );
         mTabSegment.addTab(component)
-                .addTab(util)
                 .addTab(lab);
     }
 

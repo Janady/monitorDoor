@@ -41,4 +41,5 @@
 
     <!-- for QMUI -->
     <dimen name="home_tab_height">49dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

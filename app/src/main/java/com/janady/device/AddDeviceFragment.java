@@ -51,17 +51,17 @@ public class AddDeviceFragment extends JBaseFragment {
             }
         });
         mTopBar.setTitle(R.string.guide_module_title_device_setwifi);
-//        mTopBar.addRightImageButton(R.drawable.ic_video_slowplay, R.id.topbar_add_button).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                Intent intent = new Intent();
-//
-//                intent.setClass(getContext(), ActivityGuideMain.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//
-//                startActivity(intent);
-//            }
-//        });
+        mTopBar.addRightImageButton(R.drawable.ic_video_slowplay, R.id.topbar_add_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent();
+
+                intent.setClass(getContext(), ActivityGuideMain.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                startActivity(intent);
+            }
+        });
     }
 }

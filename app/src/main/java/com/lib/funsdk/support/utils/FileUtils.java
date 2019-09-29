@@ -1,5 +1,7 @@
 package com.lib.funsdk.support.utils;
 
+import android.util.Log;
+
 import com.lib.FunSDK;
 
 import java.io.BufferedReader;
@@ -64,11 +66,11 @@ public class FileUtils {
     public static String readFromFile(String path) {
     	try {
     		File file = new File(path);
-    		
+
     		if ( !file.exists() ) {
     			return null;
     		}
-    		
+
     		FileReader fr = new FileReader(file);
     		BufferedReader br = new BufferedReader(fr);
     		
@@ -77,7 +79,7 @@ public class FileUtils {
     		while ((line = br.readLine()) != null) {
     			buffer += line + "\n";
     		}
-    		
+
     		br.close();
     		fr.close();
     		
@@ -92,11 +94,11 @@ public class FileUtils {
     public static void saveToFile(String path, String text) {
     	try {
     		File file = new File(path);
-    		
+
     		if ( !file.exists() ) {
     			file.createNewFile();
     		}
-    		
+
     		FileWriter fw = new FileWriter(file);
     		fw.write(text);
     		

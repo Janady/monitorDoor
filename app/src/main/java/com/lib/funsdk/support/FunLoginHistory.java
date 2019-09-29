@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.util.Base64;
+import android.util.Log;
 
 import com.lib.funsdk.support.utils.FileUtils;
 
@@ -103,7 +104,7 @@ public class FunLoginHistory {
 				"yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).format(new Date());
 		
 		mSavedLoginUserInfo.add(0, existUserInfo);
-		
+
 		save();
 	}
 	
@@ -118,7 +119,7 @@ public class FunLoginHistory {
 				jsonObj.put("logindate", userInfo.loginDate);
 				jsonArray.put(jsonObj);
 			}
-			
+
 			return Base64.encodeToString(jsonArray.toString().getBytes(), Base64.DEFAULT);
 		} catch (Exception e) {
 			
@@ -132,7 +133,7 @@ public class FunLoginHistory {
 			String path = FunPath.getLoginHistoryPath();
 			String encStr = FileUtils.readFromFile(path);
 			String desStr = new String(Base64.decode(encStr, Base64.DEFAULT));
-			
+
 			JSONArray jsonArray = new JSONArray(desStr);
 			for ( int i = 0; i < jsonArray.length(); i ++ ) {
 				JSONObject jsonObj = jsonArray.getJSONObject(i);
