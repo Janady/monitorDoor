@@ -1,20 +1,27 @@
 package com.example.funsdkdemo;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.example.download.XDownloadFileManager;
 import com.lib.funsdk.support.FunPath;
 import com.lib.funsdk.support.FunSupport;
+import com.litesuits.orm.LiteOrm;
 import com.qmuiteam.qmui.arch.QMUISwipeBackActivityManager;
 
 
 public class MyApplication extends Application {
 
+	public static LiteOrm liteOrm;
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		QMUISwipeBackActivityManager.init(this);
-		
+
+		if (liteOrm == null) {
+			liteOrm = LiteOrm.newSingleInstance(this, "liteorm.db");
+		}
+		liteOrm.setDebugged(false);
 		/**
 		 * 以下是FunSDK初始化
 		 */

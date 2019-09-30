@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:padding="3dp">
+
+    <com.qmuiteam.qmui.layout.QMUILinearLayout
+        android:id="@+id/test_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/qmui_config_color_white"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:qmui_borderColor="?attr/qmui_config_color_separator"
+        app:qmui_outerNormalColor="?attr/qmui_config_color_background"
+        app:qmui_showBorderOnlyBeforeL="true">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="2dp">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="蓝牙门控"
+                android:textColor="@color/text"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="在线"
+                android:textColor="@color/demo_desc"
+                android:textSize="8sp"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@id/name"
+                app:layout_constraintTop_toBottomOf="@id/name" />
+
+            <TextView
+                android:id="@+id/tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/bg_gray"
+                android:padding="2dp"
+                android:text="默认房间"
+                android:textColor="@color/demo_desc"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:textSize="8sp" />
+
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_margin="5dp"
+                android:src="@drawable/ic_room"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/countTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="4"
+                android:textColor="@color/whitebg_text"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/count_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:text="数量"
+                android:textColor="@color/hint_color"
+                app:layout_constraintBottom_toTopOf="@id/countTv"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:textSize="8sp" />
+        </android.support.constraint.ConstraintLayout>
+
+    </com.qmuiteam.qmui.layout.QMUILinearLayout>
+</LinearLayout>

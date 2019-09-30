@@ -43,7 +43,6 @@ public class DeviceCameraFragment extends JBaseFragment
     private TextView mTextVideoStat = null;
 
     public void setFunDevice(FunDevice mFunDevice) {
-        Log.d("zyk", " >> mFunDevice!");
         this.mFunDevice = mFunDevice;
     }
 

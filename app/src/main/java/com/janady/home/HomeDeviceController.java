@@ -1,40 +1,37 @@
 package com.janady.home;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.example.common.DialogInputPasswd;
 import com.example.funsdkdemo.R;
+import com.janady.adapter.CategoryItemAdapter;
+import com.janady.base.JTabSegmentFragment;
 import com.janady.device.AddDeviceFragment;
 import com.janady.base.BaseRecyclerAdapter;
 import com.janady.base.RecyclerViewHolder;
 import com.janady.device.DeviceCameraFragment;
+import com.janady.manager.DataManager;
+import com.janady.model.CategoryItemDescription;
+import com.janady.setup.JBaseFragment;
 import com.lib.FunSDK;
 import com.lib.funsdk.support.FunDevicePassword;
 import com.lib.funsdk.support.FunError;
-import com.lib.funsdk.support.FunPath;
 import com.lib.funsdk.support.FunSupport;
-import com.lib.funsdk.support.OnFunDeviceCaptureListener;
 import com.lib.funsdk.support.OnFunDeviceOptListener;
 import com.lib.funsdk.support.config.OPPTZPreset;
 import com.lib.funsdk.support.config.SystemInfo;
 import com.lib.funsdk.support.models.FunDevice;
-import com.lib.funsdk.support.models.FunStreamType;
-import com.lib.funsdk.support.utils.FileUtils;
 import com.lib.funsdk.support.widget.FunVideoView;
 import com.lib.sdk.struct.H264_DVR_FILE_DATA;
 
-import java.io.File;
 import java.util.List;
 
-public class HomeDeviceController extends HomeController<FunDevice> implements OnFunDeviceOptListener {
-    private List<FunDevice> mFunDeviceslist;
+public class HomeDeviceController extends HomeController<CategoryItemDescription> implements OnFunDeviceOptListener {
+    private List<CategoryItemDescription> mFunDeviceslist;
     private FunVideoView mFunVideoView;
     public HomeDeviceController(Context context) {
         super(context);
@@ -51,37 +48,42 @@ public class HomeDeviceController extends HomeController<FunDevice> implements O
         mTopBar.addRightImageButton(R.drawable.ic_topbar_add, R.id.topbar_add_button).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                startFragment(new AddDeviceFragment());
+                startFragment(new JTabSegmentFragment());
             }
         });
 
         //FunSupport.getInstance().registerOnFunDeviceOptListener(this);
     }
 
-    private ItemAdapter mItemAdapter;
+    private CategoryItemAdapter mItemAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     @Override
-    protected ItemAdapter getItemAdapter() {
+    protected BaseRecyclerAdapter<CategoryItemDescription> getItemAdapter() {
         if (mItemAdapter == null) {
-            List<FunDevice> list = FunSupport.getInstance().getDeviceList();
+            List<CategoryItemDescription> list = DataManager.getInstance().getCategoryDesciptions();
             mFunDeviceslist = list;
-            mItemAdapter = new ItemAdapter(getContext(), list);
+            mItemAdapter = new CategoryItemAdapter(getContext(), list);
         }
         return mItemAdapter;
     }
 
     @Override
     protected RecyclerView.LayoutManager getLayoutManager() {
-        if (mLayoutManager == null) mLayoutManager = new GridLayoutManager(getContext(), 1);
+        if (mLayoutManager == null) mLayoutManager = new GridLayoutManager(getContext(), 2);
         return mLayoutManager;
     }
 
     @Override
     protected void onItemClicked(int pos) {
-        FunDevice funDevice = mFunDeviceslist.get(pos);
-        DeviceCameraFragment deviceCameraFragment = new DeviceCameraFragment();
-        deviceCameraFragment.setFunDevice(funDevice);
-        startFragment(deviceCameraFragment);
+        CategoryItemDescription funDevice = mFunDeviceslist.get(pos);
+        try {
+            JBaseFragment fragment = funDevice.getDemoClass().newInstance();
+            startFragment(fragment);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
     }
 
     private void requestSystemInfo(FunDevice funDevice) {
@@ -227,46 +229,5 @@ public class HomeDeviceController extends HomeController<FunDevice> implements O
     @Override
     public void onDeviceFileListGetFailed(FunDevice funDevice) {
 
-    }
-
-    static class ItemAdapter extends BaseRecyclerAdapter<FunDevice> {
-        public ItemAdapter(Context ctx, List<FunDevice> data) {
-            super(ctx, data);
-        }
-
-        @Override
-        public int getItemLayoutId(int viewType) {
-            return R.layout.fun_device_item;
-        }
-
-        @Override
-        public void bindData(RecyclerViewHolder holder, int position, FunDevice item) {
-            holder.getTextView(R.id.item_name).setText(item.getDevName());
-            ImageView iv = holder.getImageView(R.id.cover);
-            String path = FunPath.getCoverPath(item.getDevSn());
-
-            File file = new File(path);
-            if (file.exists()) {
-                iv.setVisibility(VISIBLE);
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = false;
-                options.inPreferredConfig = Bitmap.Config.RGB_565;
-                options.inDither = true;
-                Bitmap bitmap = BitmapFactory.decodeFile(path);
-                iv.setImageBitmap(bitmap);
-            } else {
-                iv.setVisibility(GONE);
-            }
-//            FunVideoView funVideoView = (FunVideoView) holder.getView(R.id.funVideoView);
-//            if (!item.hasLogin() || !item.hasConnected()) {
-//                FunSupport.getInstance().requestDeviceLogin(item);
-//            } else {
-//                FunSupport.getInstance().requestDeviceConfig(item, SystemInfo.CONFIG_NAME);
-//            }
-            // playRealMedia(funVideoView, item);
-//            if (item.getIconRes() != 0) {
-//                holder.getImageView(R.id.item_icon).setImageResource(item.getIconRes());
-//            }
-        }
     }
 }

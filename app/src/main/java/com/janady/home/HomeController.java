@@ -97,7 +97,7 @@ public abstract class HomeController<T> extends QMUIWindowInsetLayout {
         });
         mRecyclerView.setAdapter(mItemAdapter);
         mRecyclerView.setLayoutManager(getLayoutManager());
-        mRecyclerView.addItemDecoration(new GridDividerItemDecoration(getContext(), 1));
+        //mRecyclerView.addItemDecoration(new GridDividerItemDecoration(getContext(), 1));
     }
 
     protected abstract BaseRecyclerAdapter<T> getItemAdapter();

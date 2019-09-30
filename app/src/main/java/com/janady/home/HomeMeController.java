@@ -4,13 +4,14 @@ import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.janady.adapter.BaseItemAdapter;
 import com.janady.base.BaseRecyclerAdapter;
 import com.lib.funsdk.support.models.FunDevice;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeMeController extends HomeController<FunDevice> {
+public class HomeMeController extends HomeController<String> {
     public HomeMeController(Context context) {
         super(context);
     }
@@ -21,9 +22,9 @@ public class HomeMeController extends HomeController<FunDevice> {
     }
 
     @Override
-    protected BaseRecyclerAdapter<FunDevice> getItemAdapter() {
-        List<FunDevice> list = new ArrayList<>();
-        return new HomeDeviceController.ItemAdapter(getContext(), list);
+    protected BaseRecyclerAdapter<String> getItemAdapter() {
+        List<String> list = new ArrayList<>();
+        return new BaseItemAdapter(getContext(), list);
     }
 
     @Override

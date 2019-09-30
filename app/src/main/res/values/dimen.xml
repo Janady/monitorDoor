@@ -42,4 +42,9 @@
     <!-- for QMUI -->
     <dimen name="home_tab_height">49dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+
+    <!-- ListView -->
+    <dimen name="list_divider_height">1px</dimen>
+    <dimen name="list_divider_height_negative">-1px</dimen>
 </resources>
