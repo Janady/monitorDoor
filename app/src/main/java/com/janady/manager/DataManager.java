@@ -9,12 +9,16 @@ import com.janady.database.model.Remote;
 import com.janady.device.AddDeviceFragment;
 import com.janady.device.BluetoothEditFragment;
 import com.janady.device.BluetoothListFragment;
+import com.janady.device.BluetoothLockFragment;
 import com.janady.device.CameraListFragment;
+import com.janady.device.DeviceCameraFragment;
 import com.janady.device.DoorEditFragment;
 import com.janady.device.DoorListFragment;
 import com.janady.device.RemoteEditFragment;
 import com.janady.device.RemoteListFragment;
 import com.janady.model.CategoryItemDescription;
+import com.janady.model.ItemDescription;
+import com.janady.model.MainItemDescription;
 import com.lib.funsdk.support.FunSupport;
 import com.lib.funsdk.support.models.FunDevice;
 
@@ -35,7 +39,7 @@ public class DataManager {
 //        Door d = new Door();
 //        d.name = "default";
 //        MyApplication.liteOrm.save(d);
-        ArrayList<Camera> clists = MyApplication.liteOrm.query(Camera.class);
+        // ArrayList<Camera> clists = MyApplication.liteOrm.query(Camera.class);
         List<FunDevice> funDevices = FunSupport.getInstance().getDeviceList();
         ArrayList<Bluetooth> blists = MyApplication.liteOrm.query(Bluetooth.class);
         ArrayList<Remote> rlists = MyApplication.liteOrm.query(Remote.class);
@@ -61,6 +65,41 @@ public class DataManager {
         list.add(bluetooth);
         list.add(remote);
         list.add(room);
+        return list;
+    }
+    public List<MainItemDescription> getDescriptions() {
+        List<MainItemDescription> list = new ArrayList<>();
+        List<FunDevice> funDevices = FunSupport.getInstance().getDeviceList();
+        for (FunDevice device : funDevices) {
+            MainItemDescription mainDescription = new MainItemDescription(DeviceCameraFragment.class, device.devName, R.drawable.ic_camera, MainItemDescription.DeviceType.CAM);
+            mainDescription.setDevice(device);
+            list.add(mainDescription);
+        }
+
+        MainItemDescription bleDescription = new MainItemDescription(BluetoothLockFragment.class, "蓝牙门禁", R.drawable.ic_bluetooth, MainItemDescription.DeviceType.BLE);
+        ArrayList<Bluetooth> blists = MyApplication.liteOrm.query(Bluetooth.class);
+        List<Object> bitems = new ArrayList<>();
+        for (Bluetooth bluetooth : blists) {
+            ItemDescription itemDescription = new ItemDescription(BluetoothLockFragment.class, bluetooth.name, R.drawable.icon_check);
+            itemDescription.setItem(bluetooth);
+            bitems.add(itemDescription);
+        }
+        bleDescription.setList(bitems);
+        list.add(bleDescription);
+
+        ArrayList<Remote> rlists = MyApplication.liteOrm.query(Remote.class);
+        for (Remote remote : rlists) {
+            MainItemDescription remoteDescription = new MainItemDescription(BluetoothListFragment.class, remote.name, R.drawable.ic_remote, MainItemDescription.DeviceType.REMOTE);
+            remoteDescription.setDevice(remote);
+            List<Object> ritems = new ArrayList<>();
+            for (Bluetooth bluetooth : blists) {
+                ItemDescription itemDescription = new ItemDescription(BluetoothEditFragment.class, bluetooth.name, R.drawable.icon_check);
+                itemDescription.setItem(bluetooth);
+                ritems.add(itemDescription);
+            }
+            remoteDescription.setList(ritems);
+            list.add(remoteDescription);
+        }
         return list;
     }
 }

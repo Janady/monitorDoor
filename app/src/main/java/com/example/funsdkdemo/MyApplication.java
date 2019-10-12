@@ -13,11 +13,13 @@ import com.qmuiteam.qmui.arch.QMUISwipeBackActivityManager;
 public class MyApplication extends Application {
 
 	public static LiteOrm liteOrm;
+	public static Context context;
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		QMUISwipeBackActivityManager.init(this);
 
+		context = getApplicationContext();
 		if (liteOrm == null) {
 			liteOrm = LiteOrm.newSingleInstance(this, "liteorm.db");
 		}

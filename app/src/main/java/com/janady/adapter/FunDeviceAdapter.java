@@ -59,4 +59,21 @@ public class FunDeviceAdapter extends BaseRecyclerAdapter<FunDevice> {
 //                holder.getImageView(R.id.item_icon).setImageResource(item.getIconRes());
 //            }
     }
+    public static boolean showCameraImage(FunDevice item, ImageView iv) {
+        String path = FunPath.getCoverPath(item.getDevSn());
+
+        File file = new File(path);
+        if (file.exists()) {
+            iv.setVisibility(View.VISIBLE);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = false;
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+            options.inDither = true;
+            Bitmap bitmap = BitmapFactory.decodeFile(path);
+            iv.setImageBitmap(bitmap);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

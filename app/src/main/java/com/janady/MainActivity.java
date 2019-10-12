@@ -26,7 +26,8 @@ public class MainActivity extends QMUIFragmentActivity {
         rxPermissions = new RxPermissions(this);
 
         checkPermission(getString(R.string.all_permission), Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO);
+                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.READ_EXTERNAL_STORAGE);
     }
     private boolean checkPermission(final String permissionTitle, final String... permission) {
         try{
