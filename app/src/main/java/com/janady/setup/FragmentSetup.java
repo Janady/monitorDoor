@@ -44,7 +44,7 @@ public class FragmentSetup extends QMUIFragment implements OnFunLoginListener {
     public void onStart() {
         super.onStart();
         // 最小延时2秒打开主界面
-        mHandler.sendEmptyMessageDelayed(MESSAGE_ENTER_MAINMENU, 2000);
+        mHandler.sendEmptyMessageDelayed(MESSAGE_ENTER_MAINMENU, 3000);
         if ( !FunSupport.getInstance().getAutoLogin()
                 || !FunSupport.getInstance().loginByLastUser() ) {
             // 之前没有账号成功登录或者没有设置为自动登录,结束登录流程

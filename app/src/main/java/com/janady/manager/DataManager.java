@@ -45,9 +45,11 @@ public class DataManager {
         ArrayList<Remote> rlists = MyApplication.liteOrm.query(Remote.class);
         ArrayList<Door> dlists = MyApplication.liteOrm.query(Door.class);
         CategoryItemDescription camera = new CategoryItemDescription(CameraListFragment.class, "摄像机", R.drawable.ic_camera, funDevices.size());
-        CategoryItemDescription bluetooth = new CategoryItemDescription(BluetoothListFragment.class, "蓝牙门禁", R.drawable.ic_bluetooth, blists.size());
-        CategoryItemDescription remote = new CategoryItemDescription(RemoteListFragment.class, "远程控制", R.drawable.ic_remote, rlists.size());
-        CategoryItemDescription room = new CategoryItemDescription(DoorListFragment.class, "房间", R.drawable.ic_room, dlists.size());
+        //CategoryItemDescription bluetooth = new CategoryItemDescription(BluetoothListFragment.class, "蓝牙门禁", R.drawable.ic_bluetooth, blists.size());
+        //CategoryItemDescription remote = new CategoryItemDescription(RemoteListFragment.class, "远程控制", R.drawable.ic_remote, rlists.size());
+        CategoryItemDescription bluetooth = new CategoryItemDescription(BluetoothListFragment.class, "蓝牙门禁", R.drawable.ic_bluetooth_black_24dp, blists.size());
+        CategoryItemDescription remote = new CategoryItemDescription(RemoteListFragment.class, "远程控制", R.drawable.ic_remote_3, rlists.size());
+        CategoryItemDescription room = new CategoryItemDescription(DoorListFragment.class, "场景", R.drawable.ic_room2, dlists.size());
         list.add(camera);
         list.add(bluetooth);
         list.add(remote);
@@ -58,9 +60,12 @@ public class DataManager {
         List<CategoryItemDescription> list = new ArrayList<>();
 
         CategoryItemDescription camera = new CategoryItemDescription(AddDeviceFragment.class, "摄像机", R.drawable.ic_camera, 0);
-        CategoryItemDescription bluetooth = new CategoryItemDescription(BluetoothEditFragment.class, "蓝牙门禁", R.drawable.ic_bluetooth, 0);
+        /*CategoryItemDescription bluetooth = new CategoryItemDescription(BluetoothEditFragment.class, "蓝牙门禁", R.drawable.ic_bluetooth, 0);
         CategoryItemDescription remote = new CategoryItemDescription(RemoteEditFragment.class, "远程控制", R.drawable.ic_remote, 0);
-        CategoryItemDescription room = new CategoryItemDescription(DoorEditFragment.class, "房间", R.drawable.ic_room, 0);
+        CategoryItemDescription room = new CategoryItemDescription(DoorEditFragment.class, "房间", R.drawable.ic_room, 0);*/
+        CategoryItemDescription bluetooth = new CategoryItemDescription(BluetoothEditFragment.class, "蓝牙门禁", R.drawable.ic_bluetooth_black_24dp, 0);
+        CategoryItemDescription remote = new CategoryItemDescription(RemoteEditFragment.class, "远程控制", R.drawable.ic_remote_3, 0);
+        CategoryItemDescription room = new CategoryItemDescription(DoorEditFragment.class, "场景", R.drawable.ic_room2, 0);
         list.add(camera);
         list.add(bluetooth);
         list.add(remote);
@@ -76,7 +81,8 @@ public class DataManager {
             list.add(mainDescription);
         }
 
-        MainItemDescription bleDescription = new MainItemDescription(BluetoothLockFragment.class, "蓝牙门禁", R.drawable.ic_bluetooth, MainItemDescription.DeviceType.BLE);
+        //MainItemDescription bleDescription = new MainItemDescription(BluetoothLockFragment.class, "蓝牙门禁", R.drawable.ic_bluetooth, MainItemDescription.DeviceType.BLE);
+        MainItemDescription bleDescription = new MainItemDescription(BluetoothLockFragment.class, "蓝牙门禁", R.drawable.ic_bluetooth_black_24dp, MainItemDescription.DeviceType.BLE);
         ArrayList<Bluetooth> blists = MyApplication.liteOrm.query(Bluetooth.class);
         List<Object> bitems = new ArrayList<>();
         for (Bluetooth bluetooth : blists) {
@@ -89,7 +95,7 @@ public class DataManager {
 
         ArrayList<Remote> rlists = MyApplication.liteOrm.query(Remote.class);
         for (Remote remote : rlists) {
-            MainItemDescription remoteDescription = new MainItemDescription(BluetoothListFragment.class, remote.name, R.drawable.ic_remote, MainItemDescription.DeviceType.REMOTE);
+            MainItemDescription remoteDescription = new MainItemDescription(BluetoothListFragment.class, remote.name, R.drawable.ic_remote_3, MainItemDescription.DeviceType.REMOTE);
             remoteDescription.setDevice(remote);
             List<Object> ritems = new ArrayList<>();
             for (Bluetooth bluetooth : blists) {

@@ -1,10 +1,12 @@
 package com.janady.model;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.Toast;
 
 import com.example.funsdkdemo.R;
+import com.janady.RoundRect;
 import com.janady.base.BaseRecyclerAdapter;
 import com.janady.base.RecyclerViewHolder;
 
@@ -26,5 +28,9 @@ public class BaseItemAdapter extends BaseRecyclerAdapter<ItemDescription> {
     public void bindData(RecyclerViewHolder holder, int position, final ItemDescription item) {
         if (item.getIconRes() != 0) holder.getImageView(R.id.img).setImageResource(item.getIconRes());
         holder.getTextView(R.id.name).setText(item.getName());
+
+        RoundRect roundRect = new RoundRect(100,100,10);
+        Bitmap photo = roundRect.toRoundRect(context,R.drawable.btlocker2);
+        holder.getImageView(R.id.img).setImageBitmap(photo);
     }
 }

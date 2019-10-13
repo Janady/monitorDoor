@@ -1,11 +1,20 @@
 package com.janady.base;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PaintDrawable;
+import android.support.annotation.DrawableRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.funsdkdemo.R;
+import com.janady.RoundRect;
 import com.janady.model.ItemDescription;
 
 import java.util.ArrayList;
@@ -38,6 +47,10 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<Recycl
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final RecyclerViewHolder holder = new RecyclerViewHolder(mContext,
                 mInflater.inflate(getItemLayoutId(viewType), parent, false));
+        RoundRect roundRect = new RoundRect(50,50,100);
+        Bitmap photo = roundRect.toRoundRect(mContext, R.drawable.ic_locker);
+
+
         if (mClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

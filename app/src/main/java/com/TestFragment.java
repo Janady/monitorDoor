@@ -1,6 +1,7 @@
 package com;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.media.Image;
 import android.support.annotation.NonNull;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.funsdkdemo.MyApplication;
 import com.example.funsdkdemo.R;
+import com.janady.RoundRect;
 import com.janady.adapter.FunDeviceAdapter;
 import com.janady.base.BaseRecyclerAdapter;
 import com.janady.base.GridDividerItemDecoration;
@@ -88,7 +90,7 @@ public class TestFragment extends JBaseFragment implements ExpandAdapter.OnClick
         return rootView;
     }
     private void initTopBar() {
-        mTopBar.setTitle("我的摄像机");
+        mTopBar.setTitle("我的所有设备");
         mTopBar.addRightImageButton(R.drawable.ic_topbar_add, R.id.topbar_add_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,15 +115,17 @@ public class TestFragment extends JBaseFragment implements ExpandAdapter.OnClick
             MainItemDescription items = new MainItemDescription(CameraListFragment.class, "camera-"+i, R.drawable.ic_camera, MainItemDescription.DeviceType.CAM);
             res.add(items);
         }
-        MainItemDescription bleDescription = new MainItemDescription(BluetoothListFragment.class, "蓝牙门禁", R.drawable.ic_bluetooth, MainItemDescription.DeviceType.BLE);
         ArrayList<Bluetooth> blists = MyApplication.liteOrm.query(Bluetooth.class);
         List<Object> items = new ArrayList<>();
-        for (int i =0; i< 5; i++) {
-            ItemDescription itemDescription = new ItemDescription(BluetoothEditFragment.class, "ble-"+i, R.drawable.ic_bluetooth);
-            items.add(itemDescription);
+        if(blists.size()>0) {
+            MainItemDescription bleDescription = new MainItemDescription(BluetoothListFragment.class, "蓝牙设备", R.drawable.ic_bluetooth_black_24dp, MainItemDescription.DeviceType.BLE);
+            for (int i = 0; i < 5; i++) {
+                ItemDescription itemDescription = new ItemDescription(BluetoothEditFragment.class, "ble-" + i, R.drawable.ic_bluetooth_black_24dp);
+                items.add(itemDescription);
+            }
+            bleDescription.setList(items);
+            res.add(bleDescription);
         }
-        bleDescription.setList(items);
-        res.add(bleDescription);
         for (int i = 0; i < 2; i++) {
             MainItemDescription remoteDescription = new MainItemDescription(BluetoothListFragment.class, "remote-"+i, R.drawable.ic_remote, MainItemDescription.DeviceType.REMOTE);
             List<Object> remote_items = new ArrayList<>();
@@ -210,6 +214,9 @@ public class TestFragment extends JBaseFragment implements ExpandAdapter.OnClick
                     Toast.makeText(context, item.name, Toast.LENGTH_LONG);
                 }
             });
+            RoundRect roundRect = new RoundRect(500,500,100);
+            Bitmap photo = roundRect.toRoundRect(context,R.mipmap.ic_launcher);
+            itemViewHolder.imageView.setImageBitmap(photo);
         }
 
         @Override

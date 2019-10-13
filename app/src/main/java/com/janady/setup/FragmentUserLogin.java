@@ -59,6 +59,11 @@ public class FragmentUserLogin extends JBaseFragment implements View.OnClickList
         mBtnLoginByWeibo.setOnClickListener(this);
         mBtnLoginByQQ.setOnClickListener(this);
 
+
+        mBtnLoginByQQ.setVisibility(View.GONE);
+        mBtnLoginByWeibo.setVisibility(View.GONE);
+
+
         mBtnCheckSavePasswd = root.findViewById(R.id.checkboxSavePassword);
         UIFactory.setLeftDrawable(getContext(), mBtnCheckSavePasswd,
                 R.drawable.icon_check, 24, 24);
