@@ -172,66 +172,11 @@ public class TestFragment extends JBaseFragment implements ExpandAdapter.OnClick
     //***********************************************************
     // item class
     //***********************************************************
-    public class CItem {
-        public String name = "";
-    }
-    public class CListItems {
-        public CListItems() {
-            name = "";
-            expanded = false;
-            items = new ArrayList<>();
-        }
-        public String name;
-        public boolean expanded;
-        public List<CItem> items;
-    }
 
-    //***********************************************************
-    // adapter container
-    //***********************************************************
-    public class ItemAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        private List<CItem> items;
-        private Context context;
-        public ItemAdapter(Context ctx, List<CItem> cItems) {
-            context = ctx;
-            items = cItems;
-        }
-        @NonNull
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-            View v = LayoutInflater.from(context).inflate(R.layout.jtest_item_layout, viewGroup, false);
-            return new ItemViewHolder(context, v);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-            ItemViewHolder itemViewHolder = (ItemViewHolder) viewHolder;
-            final CItem item = items.get(i);
-            itemViewHolder.nameTv.setText(item.name);
-            itemViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(context, item.name, Toast.LENGTH_LONG);
-                }
-            });
-            RoundRect roundRect = new RoundRect(500,500,100);
-            Bitmap photo = roundRect.toRoundRect(context,R.mipmap.ic_launcher);
-            itemViewHolder.imageView.setImageBitmap(photo);
-        }
-
-        @Override
-        public int getItemCount() {
-            return items.size();
-        }
-
-        public class ItemViewHolder extends RecyclerView.ViewHolder {
-            public TextView nameTv;
-            public ImageView imageView;
-            public ItemViewHolder(Context context, @NonNull View itemView) {
-                super(itemView);
-                nameTv = itemView.findViewById(R.id.name);
-                imageView = itemView.findViewById(R.id.img);
-            }
-        }
+    @Override
+    public void onStart() {
+        super.onStart();
+        mainItems = DataManager.getInstance().getDescriptions();
+        mItemAdapter.setData(mainItems);
     }
 }

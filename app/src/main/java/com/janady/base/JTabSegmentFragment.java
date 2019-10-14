@@ -142,7 +142,7 @@ public class JTabSegmentFragment extends JBaseFragment {
                     section.addItemView(normalItem, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(item.getDemoClass()== BluetoothEditFragment.class){
+                            if(item.getDemoClass() == BluetoothEditFragment.class){
                                     Intent intent = new Intent();
                                     intent.putExtra("DeviceTypsSpinnerNo",1);
                                     intent.setClass(getContext(), DeviceAddByUser.class);

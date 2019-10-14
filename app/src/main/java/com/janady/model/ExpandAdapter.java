@@ -48,7 +48,7 @@ public class ExpandAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.items = items;
     }
 
-    public void setData() {
+    public void setData(List<MainItemDescription> items) {
         this.items = items;
     }
 
