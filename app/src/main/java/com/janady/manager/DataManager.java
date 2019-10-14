@@ -10,6 +10,7 @@ import com.janady.device.AddDeviceFragment;
 import com.janady.device.BluetoothEditFragment;
 import com.janady.device.BluetoothListFragment;
 import com.janady.device.BluetoothLockFragment;
+import com.janady.device.BluetoothOperatorFragment;
 import com.janady.device.CameraListFragment;
 import com.janady.device.DeviceCameraFragment;
 import com.janady.device.DoorEditFragment;
@@ -82,11 +83,11 @@ public class DataManager {
         }
 
         //MainItemDescription bleDescription = new MainItemDescription(BluetoothLockFragment.class, "蓝牙门禁", R.drawable.ic_bluetooth, MainItemDescription.DeviceType.BLE);
-        MainItemDescription bleDescription = new MainItemDescription(BluetoothLockFragment.class, "蓝牙门禁", R.drawable.ic_bluetooth_black_24dp, MainItemDescription.DeviceType.BLE);
+        MainItemDescription bleDescription = new MainItemDescription(BluetoothOperatorFragment.class, "蓝牙门禁", R.drawable.ic_bluetooth_black_24dp, MainItemDescription.DeviceType.BLE);
         ArrayList<Bluetooth> blists = MyApplication.liteOrm.query(Bluetooth.class);
         List<Object> bitems = new ArrayList<>();
         for (Bluetooth bluetooth : blists) {
-            ItemDescription itemDescription = new ItemDescription(BluetoothLockFragment.class, bluetooth.name, R.drawable.icon_check);
+            ItemDescription itemDescription = new ItemDescription(BluetoothOperatorFragment.class, bluetooth.name, R.drawable.icon_check);
             itemDescription.setItem(bluetooth);
             bitems.add(itemDescription);
         }

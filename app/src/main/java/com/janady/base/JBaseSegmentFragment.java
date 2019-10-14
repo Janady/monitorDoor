@@ -67,8 +67,9 @@ public abstract class JBaseSegmentFragment extends JBaseFragment {
             }
         });
 
-        mTopBar.setTitle("添加设备");
+        mTopBar.setTitle(title());
     }
+
     @Override
     protected View onCreateView() {
         View rootView = LayoutInflater.from(getActivity()).inflate(R.layout.jfragment_tab_viewpager_layout, null);
@@ -98,15 +99,17 @@ public abstract class JBaseSegmentFragment extends JBaseFragment {
             @Override
             public void onTabSelected(int index) {
                 mTabSegment.hideSignCountView(index);
+                tabSelected(index);
             }
 
             @Override
             public void onTabUnselected(int index) {
-
+                tabUnSelected(index);
             }
 
             @Override
             public void onTabReselected(int index) {
+                tabSelected(index);
                 mTabSegment.hideSignCountView(index);
             }
 
@@ -117,7 +120,6 @@ public abstract class JBaseSegmentFragment extends JBaseFragment {
         });
     }
 
-    protected abstract List<View> createPageViews();
     private View getPageView(int position) {
         Integer page = new Integer(position);
         View view = mPageMap.get(new Integer(position));
@@ -128,4 +130,8 @@ public abstract class JBaseSegmentFragment extends JBaseFragment {
         return view;
     }
 
+    protected abstract String title();
+    protected abstract List<View> createPageViews();
+    protected abstract void tabSelected(int index);
+    protected abstract void tabUnSelected(int index);
 }
