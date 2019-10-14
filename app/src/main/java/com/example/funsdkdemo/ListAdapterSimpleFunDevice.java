@@ -25,6 +25,11 @@ public class ListAdapterSimpleFunDevice extends BaseAdapter implements Comparato
 	private List<FunDevice> mListDevs = new ArrayList<FunDevice>();
 	private List<SearchResult> mListBleDevs = new ArrayList<SearchResult>();
 	private FunDevType currentDevType;
+	private OnClickListener mOnClickListener;
+
+	public void setOnClickListener(OnClickListener onClickListener) {
+		this.mOnClickListener = onClickListener;
+	}
 
 	public ListAdapterSimpleFunDevice(Context context) {
 		mContext = context;
@@ -129,8 +134,14 @@ public class ListAdapterSimpleFunDevice extends BaseAdapter implements Comparato
 			//holder.txtDevStatus.setTextColor(0xff177fca);
 			holder.txtDevStatus.setTextColor(mContext.getResources().getColor(R.color.demo_desc));
 
+			convertView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (mOnClickListener != null) mOnClickListener.OnClickedBle(result);
+				}
+			});
 		} else {
-			FunDevice funDevice = mListDevs.get(groupPosition);
+			final FunDevice funDevice = mListDevs.get(groupPosition);
 
 			holder.imgDevIcon.setImageResource(funDevice.devType.getDrawableResId());
 			holder.txtDevName.setText(funDevice.getDevName());
@@ -145,8 +156,13 @@ public class ListAdapterSimpleFunDevice extends BaseAdapter implements Comparato
 			} else {
 				holder.txtDevStatus.setTextColor(mContext.getResources().getColor(R.color.demo_desc));
 			}
+			convertView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (mOnClickListener != null) mOnClickListener.OnClickedFun(funDevice);
+				}
+			});
 		}
-		
 		return convertView;
 	}
 
@@ -162,4 +178,8 @@ public class ListAdapterSimpleFunDevice extends BaseAdapter implements Comparato
 		ImageView imgArrowIcon;
 	}
 
+	public interface OnClickListener {
+		public void OnClickedBle(SearchResult searchResult);
+		public void OnClickedFun(FunDevice funDevice);
+	}
 }

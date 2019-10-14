@@ -57,6 +57,8 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
 	
 	private Spinner mSpinnerDevType = null;
 	private EditText mEditDevSN;
+	private EditText mEditSceneName;
+	private EditText mEditPassword;
 	private Button mBtnDevAdd = null;
 	private ImageButton mBtnScanQrCode = null;
 	
@@ -151,6 +153,8 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
 		mSpinnerDevType.setOnItemSelectedListener(this);
 		
 		mEditDevSN = (EditText)findViewById(R.id.editDeviceSN);
+		mEditSceneName = (EditText)findViewById(R.id.editSceneName);
+		mEditPassword = (EditText)findViewById(R.id.editDeviceSN);
 		mBtnDevAdd = (Button)findViewById(R.id.devAddBtn);
 		mBtnDevAdd.setOnClickListener(this);
 		
@@ -161,6 +165,19 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
 
 		mListViewDev = mRefreshLayout.getPullToRefreshListView();
 		mAdapterDev = new ListAdapterSimpleFunDevice(this, mCurrDevType);
+		mAdapterDev.setOnClickListener(new ListAdapterSimpleFunDevice.OnClickListener() {
+			@Override
+			public void OnClickedBle(SearchResult searchResult) {
+				mEditDevSN.setText(searchResult.getAddress());
+				mEditSceneName.setText(searchResult.getName());
+			}
+
+			@Override
+			public void OnClickedFun(FunDevice funDevice) {
+				mEditDevSN.setText(funDevice.devSn);
+				mEditSceneName.setText(funDevice.devName);
+			}
+		});
 
 		mListViewDev.setAdapter(mAdapterDev);
 		mListViewDev.setOnRefreshListener(new PullRefreshListView.OnRefreshListener() {
