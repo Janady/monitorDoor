@@ -98,13 +98,15 @@ public class DataManager {
         for (Remote remote : rlists) {
             MainItemDescription remoteDescription = new MainItemDescription(BluetoothListFragment.class, remote.name, R.drawable.ic_remote_3, MainItemDescription.DeviceType.REMOTE);
             remoteDescription.setDevice(remote);
-            List<Object> ritems = new ArrayList<>();
-            for (Bluetooth bluetooth : blists) {
-                ItemDescription itemDescription = new ItemDescription(BluetoothEditFragment.class, bluetooth.name, R.drawable.icon_check);
-                itemDescription.setItem(bluetooth);
-                ritems.add(itemDescription);
+            if (remote.doorList != null) {
+                List<Object> ritems = new ArrayList<>();
+                for (Door door : remote.doorList) {
+                    ItemDescription itemDescription = new ItemDescription(BluetoothEditFragment.class, door.name, R.drawable.icon_check);
+                    itemDescription.setItem(door);
+                    ritems.add(itemDescription);
+                }
+                remoteDescription.setList(ritems);
             }
-            remoteDescription.setList(ritems);
             list.add(remoteDescription);
         }
         return list;
