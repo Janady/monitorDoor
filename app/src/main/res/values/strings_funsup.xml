@@ -24,6 +24,8 @@
 	<string name="dev_type_bullet">E - Gun shape machine</string>
 	<string name="dev_type_drum">Drum Kit</string>
 	<string name="dev_type_camera">Camera</string>
+	<string name="dev_type_blelocker">Bluetooth Remoter</string>
+	<string name="dev_type_remoter">WIFI Remoter</string>
 
 	<string name="dev_type_unknown">Unknown device</string>
 	

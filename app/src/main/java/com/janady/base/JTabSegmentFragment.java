@@ -1,5 +1,6 @@
 package com.janady.base;
 
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -12,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.funsdkdemo.R;
+import com.janady.device.BluetoothEditFragment;
+import com.janady.device.DeviceAddByUser;
 import com.janady.manager.DataManager;
 import com.janady.model.CategoryItemDescription;
 import com.janady.setup.JBaseFragment;
@@ -85,8 +88,8 @@ public class JTabSegmentFragment extends JBaseFragment {
     private void initTabAndPager() {
         mContentViewPager.setAdapter(mPagerAdapter);
         mContentViewPager.setCurrentItem(mDestPage.getPosition(), false);
-        mTabSegment.addTab(new QMUITabSegment.Tab("手动添加"));
-        mTabSegment.addTab(new QMUITabSegment.Tab("附近设备"));
+        mTabSegment.addTab(new QMUITabSegment.Tab("选择设备类型"));
+        //mTabSegment.addTab(new QMUITabSegment.Tab("附近设备"));
         mTabSegment.setupWithViewPager(mContentViewPager, false);
         mTabSegment.setMode(QMUITabSegment.MODE_FIXED);
         mTabSegment.setHasIndicator(true);
@@ -124,8 +127,8 @@ public class JTabSegmentFragment extends JBaseFragment {
                 QMUIGroupListView mGroupListView = view.findViewById(R.id.groupListView);
                 int size = QMUIDisplayHelper.dp2px(getContext(), 20);
                 QMUIGroupListView.Section section = QMUIGroupListView.newSection(getContext())
-                        .setTitle("Section 1: 默认提供的样式")
-                        .setDescription("Section 1 的描述")
+                        //.setTitle("Section 1: 默认提供的样式")
+                        //.setDescription("Section 1 的描述")
                         .setLeftIconSize(size, ViewGroup.LayoutParams.WRAP_CONTENT);
                 List<CategoryItemDescription> list = DataManager.getInstance().showCategoryDesciptions();
                 for (final CategoryItemDescription item : list) {
@@ -139,14 +142,22 @@ public class JTabSegmentFragment extends JBaseFragment {
                     section.addItemView(normalItem, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            JBaseFragment fragment = null;
-                            try {
-                                fragment = item.getDemoClass().newInstance();
-                                startFragment(fragment);
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            } catch (java.lang.InstantiationException e) {
-                                e.printStackTrace();
+                            if(item.getDemoClass()== BluetoothEditFragment.class){
+                                    Intent intent = new Intent();
+                                    intent.putExtra("DeviceTypsSpinnerNo",1);
+                                    intent.setClass(getContext(), DeviceAddByUser.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                            }else {
+                                JBaseFragment fragment = null;
+                                try {
+                                    fragment = item.getDemoClass().newInstance();
+                                    startFragment(fragment);
+                                } catch (IllegalAccessException e) {
+                                    e.printStackTrace();
+                                } catch (java.lang.InstantiationException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     });

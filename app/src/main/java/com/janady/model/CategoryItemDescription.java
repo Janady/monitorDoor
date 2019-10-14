@@ -8,10 +8,10 @@ public class CategoryItemDescription {
     private int mIconRes;
     private int mCount;
     private Object mDevice;
+
     public CategoryItemDescription(Class<? extends JBaseFragment> kitDemoClass, String kitName){
         this(kitDemoClass, kitName, 0, 0);
     }
-
 
     public CategoryItemDescription(Class<? extends JBaseFragment> kitDemoClass, String kitName, int iconRes, int count) {
         mKitDemoClass = kitDemoClass;
@@ -19,6 +19,7 @@ public class CategoryItemDescription {
         mIconRes = iconRes;
         mCount = count;
     }
+
     public Class<? extends JBaseFragment> getDemoClass() {
         return mKitDemoClass;
     }

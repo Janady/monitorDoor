@@ -55,6 +55,7 @@ import com.lib.funsdk.support.OnFunDeviceOptListener;
 import com.lib.funsdk.support.config.OPPTZControl;
 import com.lib.funsdk.support.config.OPPTZPreset;
 import com.lib.funsdk.support.config.SystemInfo;
+import com.lib.funsdk.support.models.FunDevType;
 import com.lib.funsdk.support.models.FunDevice;
 import com.lib.funsdk.support.models.FunStreamType;
 import com.lib.funsdk.support.utils.FileUtils;
@@ -66,7 +67,7 @@ import com.lib.sdk.struct.ManualSnapModeJP;
 import java.io.File;
 import java.util.Arrays;
 
-import static com.lib.funsdk.support.models.FunDevType.EE_DEV_SPORTCAMERA;
+//import static com.lib.funsdk.support.models.FunDevType.EE_DEV_SPORTCAMERA;
 
 /**
  * Demo: 监控类设备播放控制等 
@@ -349,6 +350,7 @@ public class ActivityGuideDeviceSport
 		super.onConfigurationChanged(newConfig);
 	}
 
+	@SuppressLint("ResourceType")
 	@Override
 	public void onClick(View v) {
 		if (v.getId() >= 1000 && v.getId() < 1000 + mChannelCount) {
@@ -811,7 +813,8 @@ public class ActivityGuideDeviceSport
 		Intent intent = new Intent();
 		intent.putExtra("FUN_DEVICE_ID", mFunDevice.getId());
 		intent.putExtra("FILE_TYPE", "jpg");
-		if (mFunDevice.devType == EE_DEV_SPORTCAMERA) {
+		//if (mFunDevice.devType == EE_DEV_SPORTCAMERA) {
+		if (mFunDevice.devType == FunDevType.EE_DEV_UNKNOWN) {
 			intent.setClass(this, ActivityGuideDeviceSportPicList.class);
 		} else {
 			intent.setClass(this, ActivityGuideDevicePictureList.class);

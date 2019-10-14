@@ -55,9 +55,10 @@ public class ActivityGuideDeviceSNLogin extends ActivityDemo
 
 	// 定义当前支持通过序列号登录的设备类型
 	// 如果是设备类型特定的话,固定一个就可以了
-	private final FunDevType[] mSupportDevTypes = { FunDevType.EE_DEV_NORMAL_MONITOR,
-			FunDevType.EE_DEV_INTELLIGENTSOCKET, FunDevType.EE_DEV_SMALLEYE };
-
+	/*private final FunDevType[] mSupportDevTypes = { FunDevType.EE_DEV_NORMAL_MONITOR,
+			FunDevType.EE_DEV_INTELLIGENTSOCKET, FunDevType.EE_DEV_SMALLEYE };*/
+	private final FunDevType[] mSupportDevTypes = { FunDevType.EE_DEV_CAMERA,
+			FunDevType.EE_DEV_BLUETOOTH, FunDevType.EE_DEV_BLUETOOTH };
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

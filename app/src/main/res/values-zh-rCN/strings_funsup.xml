@@ -24,6 +24,8 @@
     <string name="dev_type_bullet">E型枪机</string>
     <string name="dev_type_drum">架子鼓</string>
     <string name="dev_type_camera">摄像机</string>
+    <string name="dev_type_blelocker">蓝牙设备</string>
+    <string name="dev_type_remoter">远程设备</string>
 
 	<string name="dev_type_unknown">未知设备,请联系厂家</string>
 	

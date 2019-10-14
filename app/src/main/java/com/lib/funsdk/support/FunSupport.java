@@ -2196,7 +2196,8 @@ public class FunSupport implements IFunSDKResult {
                                      String devMac) {
         FunDevice funDevice = findDeviceBySn(devMac);// findTempDevice(devMac);
         if (null == funDevice) {
-        	if (devType == FunDevType.EE_DEV_INTELLIGENTSOCKET) {
+        	//if (devType == FunDevType.EE_DEV_INTELLIGENTSOCKET) {
+            if (devType == FunDevType.EE_DEV_CAMERA) {
         		funDevice = new FunDeviceSocket();
 			}else {
 				funDevice = new FunDevice();

@@ -18,4 +18,11 @@
 <resources>
     <attr name="app_primary_color" format="color"/> <!-- topbar -->
     <attr name="app_content_bg_color" format="color"/> <!-- content-->
+
+    <declare-styleable name="PullToRefreshFrameLayout">
+        <attr name="has_header" format="boolean" />
+        <attr name="has_footer" format="boolean" />
+        <attr name="has_shadow" format="boolean" />
+        <attr name="has_divider" format="boolean" />
+    </declare-styleable>
 </resources>

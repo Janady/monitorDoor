@@ -195,7 +195,8 @@ public class DeviceCameraPicAdapter extends BaseAdapter implements OnFunDeviceFi
             holder.baseLayout.setVisibility(View.INVISIBLE);
         }
 
-        if (info.getFileName().endsWith(".jpg") && mFunDevice.getDevType() == FunDevType.EE_DEV_SPORTCAMERA){
+        //if (info.getFileName().endsWith(".jpg") && mFunDevice.getDevType() == FunDevType.EE_DEV_SPORTCAMERA){
+        if (info.getFileName().endsWith(".jpg") && mFunDevice.getDevType() == FunDevType.EE_DEV_CAMERA){
             synchronized (mLruCache) {
                 setImageForImageView(info.getFileName(), holder.image);  // for device of xmjp_spt_...
             }

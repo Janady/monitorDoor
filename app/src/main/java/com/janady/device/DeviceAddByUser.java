@@ -1,4 +1,4 @@
-package com.example.funsdkdemo;
+package com.janady.device;
 
 
 import android.content.Intent;
@@ -19,7 +19,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.common.DialogInputPasswd;
+import com.example.funsdkdemo.ActivityDemo;
+import com.example.funsdkdemo.ActivityGuideUserLogin;
+import com.example.funsdkdemo.DeviceActivitys;
+import com.example.funsdkdemo.ListAdapterSimpleFunDevice;
+import com.example.funsdkdemo.R;
 import com.google.zxing.activity.CaptureActivity;
+import com.inuker.bluetooth.library.search.SearchRequest;
+import com.inuker.bluetooth.library.search.SearchResult;
+import com.inuker.bluetooth.library.search.response.SearchResponse;
+import com.inuker.bluetooth.library.utils.BluetoothLog;
+import com.janady.AppConstants;
+import com.janady.lkd.ClientManager;
+import com.janady.view.PullRefreshListView;
+import com.janady.view.PullToRefreshFrameLayout;
 import com.lib.FunSDK;
 import com.lib.funsdk.support.FunDevicePassword;
 import com.lib.funsdk.support.FunError;
@@ -31,32 +44,41 @@ import com.lib.funsdk.support.models.FunDevice;
 import com.lib.funsdk.support.models.FunLoginType;
 import com.lib.sdk.struct.H264_DVR_FILE_DATA;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class ActivityGuideDeviceAddByUser extends ActivityDemo implements OnClickListener, OnFunDeviceListener, OnItemSelectedListener, OnItemClickListener, OnFunDeviceOptListener {
+
+public class DeviceAddByUser extends ActivityDemo implements OnClickListener, OnFunDeviceListener, OnItemSelectedListener, OnItemClickListener, OnFunDeviceOptListener {
 
 	
 	private TextView mTextTitle = null;
 	private ImageButton mBtnBack = null;
+    private TextView mTextTip = null;
 	
 	private Spinner mSpinnerDevType = null;
 	private EditText mEditDevSN;
 	private Button mBtnDevAdd = null;
 	private ImageButton mBtnScanQrCode = null;
 	
-	private ListView mListViewDev = null;
+//	private ListView mListViewDev = null;
+	private PullToRefreshFrameLayout mRefreshLayout;
+	private PullRefreshListView mListViewDev = null;
 	private ListAdapterSimpleFunDevice mAdapterDev = null;
 	
 	private FunDevice mFunDevice = null;
 	private FunDevType mCurrDevType = null;
-	
-	
+
+    private List<SearchResult> mBleDevices;
+
+    private boolean isBleScanning = false;
+
 	private final int MESSAGE_DELAY_FINISH = 0x100;
 	
 	
 	// 定义当前支持通过序列号登录的设备类型 
 	// 如果是设备类型特定的话,固定一个就可以了
 	private final FunDevType[] mSupportDevTypes = {
-			FunDevType.EE_DEV_NORMAL_MONITOR,
+			/*FunDevType.EE_DEV_NORMAL_MONITOR,
 			FunDevType.EE_DEV_INTELLIGENTSOCKET,
 			FunDevType.EE_DEV_SCENELAMP,
 			FunDevType.EE_DEV_LAMPHOLDER,
@@ -77,24 +99,42 @@ public class ActivityGuideDeviceAddByUser extends ActivityDemo implements OnClic
 			FunDevType.EE_DEV_UFO,
 			FunDevType.EE_DEV_IDR,
 			FunDevType.EE_DEV_BULLET,
-			FunDevType.EE_DEV_DRUM,
+			FunDevType.EE_DEV_DRUM,*/
 			FunDevType.EE_DEV_CAMERA,
 			FunDevType.EE_DEV_BLUETOOTH,
 			FunDevType.EE_DEV_REMOTER
+
 	};
-	
-	
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.activity_device_add_by_user);
+		setContentView(R.layout.jdevice_add_by_user);
 		
 		mTextTitle = (TextView)findViewById(R.id.textViewInTopLayout);
-		
+        mTextTip = (TextView)findViewById(R.id.textTip);
+        mTextTip.setText("搜索设备：");
+
+        mTextTip.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!isBleScanning) {
+                    searchDevice();
+                }else{
+                    isBleScanning=false;
+                    ClientManager.getClient().stopSearch();
+                }
+            }
+        });
+
 		mBtnBack = (ImageButton)findViewById(R.id.backBtnInTopLayout);
 		mBtnBack.setOnClickListener(this);
-		
+
+        Intent intent = getIntent();
+        int spinnerArrNo = intent.getIntExtra("DeviceTypsSpinnerNo",0);
+
 		// 初始化设备类型选择器
 		mSpinnerDevType = (Spinner)findViewById(R.id.spinnerDeviceType);
 		String[] spinnerStrs = new String[mSupportDevTypes.length];
@@ -104,8 +144,10 @@ public class ActivityGuideDeviceAddByUser extends ActivityDemo implements OnClic
 		ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, spinnerStrs);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mSpinnerDevType.setAdapter(adapter);
-		mSpinnerDevType.setSelection(0);
-		mCurrDevType = mSupportDevTypes[0];
+		//mSpinnerDevType.setSelection(0);
+		//mCurrDevType = mSupportDevTypes[0];
+        mSpinnerDevType.setSelection(spinnerArrNo);
+        mCurrDevType = mSupportDevTypes[spinnerArrNo];
 		mSpinnerDevType.setOnItemSelectedListener(this);
 		
 		mEditDevSN = (EditText)findViewById(R.id.editDeviceSN);
@@ -114,17 +156,35 @@ public class ActivityGuideDeviceAddByUser extends ActivityDemo implements OnClic
 		
 		mBtnScanQrCode = (ImageButton)findViewById(R.id.btnScanCode);
 		mBtnScanQrCode.setOnClickListener(this);
-		
-		mListViewDev = (ListView)findViewById(R.id.listOtherDevices);
-		mAdapterDev = new ListAdapterSimpleFunDevice(this);
+
+		mRefreshLayout = (PullToRefreshFrameLayout) findViewById(R.id.listOtherDevices);
+
+		mListViewDev = mRefreshLayout.getPullToRefreshListView();
+		mAdapterDev = new ListAdapterSimpleFunDevice(this, mCurrDevType);
+
 		mListViewDev.setAdapter(mAdapterDev);
+		mListViewDev.setOnRefreshListener(new PullRefreshListView.OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				// TODO Auto-generated method stub
+				searchDevice();
+			}
+
+		});
+
 		// 以局域网内搜索过的设备,显示在下方作为测试设备添加
 		if ( null != mAdapterDev ) {
 			mAdapterDev.updateDevice(FunSupport.getInstance().getLanDeviceList());
 		}
-		mListViewDev.setOnItemClickListener(this);
+
+        mBleDevices = new ArrayList<SearchResult>();
+
+		//mListViewDev.setOnItemClickListener(this);
 		
 		mTextTitle.setText(R.string.guide_module_title_device_add);
+
+        searchDevice();
 
 		// 设置登录方式为互联网方式
 		FunSupport.getInstance().setLoginType(FunLoginType.LOGIN_BY_INTENTT);
@@ -139,8 +199,9 @@ public class ActivityGuideDeviceAddByUser extends ActivityDemo implements OnClic
 			// 用户还未登录,需要先登录
 			startLogin();
 		}
+
 	}
-	
+
 
 	@Override
 	protected void onDestroy() {
@@ -198,7 +259,7 @@ public class ActivityGuideDeviceAddByUser extends ActivityDemo implements OnClic
 					
 					// 启动/打开设备操作界面
 					if ( null != mFunDevice ) {
-						DeviceActivitys.startDeviceActivity(ActivityGuideDeviceAddByUser.this, mFunDevice);
+						DeviceActivitys.startDeviceActivity(DeviceAddByUser.this, mFunDevice);
 					}
 					
 					mFunDevice = null;
@@ -528,5 +589,64 @@ public class ActivityGuideDeviceAddByUser extends ActivityDemo implements OnClic
 		// TODO Auto-generated method stub
 		
 	}
-	
+
+    /**
+     * -----------------
+     * 搜索蓝牙设备
+     */
+    private void searchDevice() {
+        SearchRequest request = new SearchRequest.Builder()
+                .searchBluetoothLeDevice(5000, 2).build();
+
+        ClientManager.getClient().search(request, mSearchResponse);
+        mRefreshLayout.showState(AppConstants.EMPTY);
+    }
+
+    private final SearchResponse mSearchResponse = new SearchResponse() {
+        @Override
+        public void onSearchStarted() {
+
+            mTextTip.setText("停止扫描设备....");
+            isBleScanning = true;
+            mRefreshLayout.showState(AppConstants.LIST);
+            BluetoothLog.w("正在搜索蓝牙设备");
+            //toolbar.setTitle(R.string.string_refreshing);
+            mBleDevices.clear();
+        }
+
+
+        @Override
+        public void onDeviceFounded(SearchResult device) {
+//            BluetoothLog.w("MainActivity.onDeviceFounded " + device.device.getAddress());
+            if (!mBleDevices.contains(device)) {
+                mBleDevices.add(device);
+                mAdapterDev.updateBleDevice(mBleDevices); }
+
+            if (mBleDevices.size() > 0) {
+                BluetoothLog.w("DeviceAddByUser.Bluetooth founds count: " + mBleDevices.size());
+                mRefreshLayout.showState(AppConstants.LIST);
+            }
+        }
+
+        @Override
+        public void onSearchStopped() {
+            isBleScanning = false;
+            mTextTip.setText("扫描设备");
+            BluetoothLog.w("DeviceAddByUser.onSearchStopped");
+            mRefreshLayout.showState(AppConstants.LIST);
+            //mTextTip.setText("扫描设备");
+            //toolbar.setTitle(R.string.devices);
+        }
+
+        @Override
+        public void onSearchCanceled() {
+            isBleScanning = false;
+			mListViewDev.onRefreshComplete(true);
+			mRefreshLayout.showState(AppConstants.LIST);
+            BluetoothLog.w("DeviceAddByUser.onSearchCanceled");
+
+            mTextTip.setText("扫描设备");
+            //toolbar.setTitle(R.string.devices);
+        }
+    };
 }

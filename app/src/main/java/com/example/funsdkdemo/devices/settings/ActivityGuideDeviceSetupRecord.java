@@ -348,7 +348,8 @@ public class ActivityGuideDeviceSetupRecord extends ActivityDemo implements OnCl
 				// 删除老的配置信息
 				mFunDevice.invalidConfig(configName);
 				
-				if(mFunDevice.getDevType() == FunDevType.EE_DEV_SMALLEYE || configName != CloudStorage.CONFIG_NAME)
+				//if(mFunDevice.getDevType() == FunDevType.EE_DEV_SMALLEYE || configName != CloudStorage.CONFIG_NAME)
+				if(mFunDevice.getDevType() == FunDevType.EE_DEV_CAMERA || configName != CloudStorage.CONFIG_NAME)
 				{
 					// 重新搜索新的配置信息
 					if (contains(DeviceConfigType.DeviceConfigCommon, configName)) {
@@ -369,7 +370,8 @@ public class ActivityGuideDeviceSetupRecord extends ActivityDemo implements OnCl
 	private boolean isAllConfigGetted() {
 		for ( String configName : DEV_CONFIGS ) {
 			if ( null == mFunDevice.getConfig(configName) ) {
-				if(mFunDevice.getDevType() == FunDevType.EE_DEV_SMALLEYE || configName != CloudStorage.CONFIG_NAME)
+				//if(mFunDevice.getDevType() == FunDevType.EE_DEV_SMALLEYE || configName != CloudStorage.CONFIG_NAME)
+				if(mFunDevice.getDevType() == FunDevType.EE_DEV_CAMERA || configName != CloudStorage.CONFIG_NAME)
 				{
 					return false;
 				}
@@ -423,7 +425,8 @@ public class ActivityGuideDeviceSetupRecord extends ActivityDemo implements OnCl
 		
 		boolean beCloudParamChanged = false;
 		CloudStorage cloudStorage = null;
-		if(mFunDevice.getDevType() == FunDevType.EE_DEV_SMALLEYE)
+		//if(mFunDevice.getDevType() == FunDevType.EE_DEV_SMALLEYE)
+		if(mFunDevice.getDevType() == FunDevType.EE_DEV_CAMERA)
 		{
 			cloudStorage = (CloudStorage)mFunDevice.getConfig(CloudStorage.CONFIG_NAME);
 			if ( null != cloudStorage ) {

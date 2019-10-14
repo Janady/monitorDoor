@@ -30,7 +30,7 @@ public class BluetoothListFragment extends JBaseGroupedListFragment {
         ArrayList<Bluetooth> blists = MyApplication.liteOrm.query(Bluetooth.class);
         for (final Bluetooth bluetooth : blists) {
             QMUICommonListItemView itemView = mGroupListView.createItemView(
-                    ContextCompat.getDrawable(getContext(), R.drawable.ic_bluetooth),
+                    ContextCompat.getDrawable(getContext(), R.drawable.ic_bluetooth_black_24dp),
                     bluetooth.name,
                     bluetooth.door == null ? "" : bluetooth.door.name,
                     QMUICommonListItemView.HORIZONTAL,

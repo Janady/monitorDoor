@@ -1,10 +1,15 @@
 package com.janady.device;
 
 import android.content.DialogInterface;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.funsdkdemo.MyApplication;
@@ -39,9 +44,9 @@ public class BluetoothEditFragment extends JBaseEditFragment {
     protected void initGroupListView() {
         if (mBluetooth == null) mBluetooth = new Bluetooth();
         int size = QMUIDisplayHelper.dp2px(getContext(), 20);
-        QMUIGroupListView.Section section = QMUIGroupListView.newSection(getContext())
-                .setTitle("编辑")
-                .setLeftIconSize(size, ViewGroup.LayoutParams.WRAP_CONTENT);
+        QMUIGroupListView.Section section = QMUIGroupListView.newSection(getContext());
+                //.setTitle("编辑")
+                //.setLeftIconSize(size, ViewGroup.LayoutParams.WRAP_CONTENT);
         QMUICommonListItemView itemWithCustom = mGroupListView.createItemView("名称");
         itemWithCustom.setAccessoryType(QMUICommonListItemView.ACCESSORY_TYPE_CUSTOM);
         EditText editText = new EditText(getContext());
@@ -49,6 +54,10 @@ public class BluetoothEditFragment extends JBaseEditFragment {
         editText.setText(mBluetooth.name);
         mNameEv = editText;
         itemWithCustom.addAccessoryCustomView(editText);
+        ImageButton btnQr = new ImageButton(getContext());
+        btnQr.setImageResource(R.drawable.input_sn_core);
+        btnQr.setLayoutParams(new RelativeLayout.LayoutParams(28,28));
+        itemWithCustom.addAccessoryCustomView(btnQr);
         section.addItemView(itemWithCustom, null);
         section.addTo(mGroupListView);
 

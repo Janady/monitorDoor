@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/imgDevIcon"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_marginLeft="5dp"
         android:layout_centerVertical="true"
         android:padding="2dp"
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:textColor="@drawable/common_title_color"
-            android:textSize="20dp" />
+            android:textSize="18dp" />
         
         <TextView
             android:id="@+id/txtDevStatus"

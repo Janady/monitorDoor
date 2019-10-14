@@ -5,7 +5,8 @@ import com.lib.funsdk.support.FunLog;
 public class FunDeviceBuilder {
 
 	public static FunDevice buildWith(FunDevType type) {
-		if ( FunDevType.EE_DEV_INTELLIGENTSOCKET == type ) {
+		//if ( FunDevType.EE_DEV_INTELLIGENTSOCKET == type ) {
+		if ( FunDevType.EE_DEV_UNKNOWN == type ) {
 			// 智能插座
 			FunLog.i("build", "a FunDeviceSocket()");
 			return new FunDeviceSocket();

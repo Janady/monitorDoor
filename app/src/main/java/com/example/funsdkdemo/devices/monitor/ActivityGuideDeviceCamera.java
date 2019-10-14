@@ -71,7 +71,7 @@ import com.lib.sdk.struct.H264_DVR_FILE_DATA;
 import java.io.File;
 import java.util.Arrays;
 
-import static com.lib.funsdk.support.models.FunDevType.EE_DEV_SPORTCAMERA;
+//import static com.lib.funsdk.support.models.FunDevType.EE_DEV_SPORTCAMERA;
 
 /**
  * Demo: 监控类设备播放控制等 
@@ -227,7 +227,8 @@ public class ActivityGuideDeviceCamera
 		mLayoutChannel = (LinearLayout) findViewById(R.id.layoutChannelBtn);
 
 		mFunVideoView = (FunVideoView) findViewById(R.id.funVideoView);
-		if (mFunDevice.devType == FunDevType.EE_DEV_LAMP_FISHEYE) {
+		//if (mFunDevice.devType == FunDevType.EE_DEV_LAMP_FISHEYE) {
+		if (mFunDevice.devType == FunDevType.EE_DEV_CAMERA) {
 			// 鱼眼灯泡,设置鱼眼效果
 			mFunVideoView.setFishEye(true);
 		}
@@ -370,6 +371,7 @@ public class ActivityGuideDeviceCamera
 		super.onConfigurationChanged(newConfig);
 	}
 
+	@SuppressLint("ResourceType")
 	@Override
 	public void onClick(View v) {
 		if (v.getId() >= 1000 && v.getId() < 1000 + mChannelCount) {
@@ -825,7 +827,8 @@ public class ActivityGuideDeviceCamera
 		Intent intent = new Intent();
 		intent.putExtra("FUN_DEVICE_ID", mFunDevice.getId());
 		intent.putExtra("FILE_TYPE", "jpg");
-		if (mFunDevice.devType == EE_DEV_SPORTCAMERA) {
+		//if (mFunDevice.devType == EE_DEV_SPORTCAMERA) {
+		if (mFunDevice.devType == FunDevType.EE_DEV_CAMERA) {
 			intent.setClass(this, ActivityGuideDeviceSportPicList.class);
 		} else {
 			intent.setClass(this, ActivityGuideDevicePictureList.class);
