@@ -15,14 +15,16 @@ public class Bluetooth {
     @Column("_id") // 指定列名
     private int id;
 
-    private String mac;
-    private String uuid;
-    private String serviceUuid;
-    private String writeUuid;
-    private String notifyUuid;
-    private String password;
-    private boolean isFirst = true;
+    public String mac;
+    public String uuid;
+    public String serviceUuid;
+    public String writeUuid;
+    public String notifyUuid;
+    public String password;
+    public boolean isFirst = true;
     public String name;
+    public String sceneName;
+
     @Mapping(Relation.OneToOne)
     public Door door;
 }

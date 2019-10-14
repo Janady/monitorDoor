@@ -24,6 +24,15 @@ public class ListAdapterSimpleFunDevice extends BaseAdapter implements Comparato
 	private LayoutInflater mInflater;
 	private List<FunDevice> mListDevs = new ArrayList<FunDevice>();
 	private List<SearchResult> mListBleDevs = new ArrayList<SearchResult>();
+
+	public FunDevType getCurrentDevType() {
+		return currentDevType;
+	}
+
+	public void setCurrentDevType(FunDevType currentDevType) {
+		this.currentDevType = currentDevType;
+	}
+
 	private FunDevType currentDevType;
 	private OnClickListener mOnClickListener;
 
@@ -53,7 +62,8 @@ public class ListAdapterSimpleFunDevice extends BaseAdapter implements Comparato
 	public void updateDevice(List<FunDevice> devList) {
 		mListDevs.clear();
 		mListDevs.addAll(devList);
-		this.notifyDataSetInvalidated();
+		this.notifyDataSetChanged();
+		//this.notifyDataSetInvalidated();
 	}
 	
 	public FunDevice getFunDevice(int position) {

@@ -1,10 +1,12 @@
 package com.janady.device;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -23,6 +25,7 @@ import com.example.funsdkdemo.ActivityDemo;
 import com.example.funsdkdemo.ActivityGuideUserLogin;
 import com.example.funsdkdemo.DeviceActivitys;
 import com.example.funsdkdemo.ListAdapterSimpleFunDevice;
+import com.example.funsdkdemo.MyApplication;
 import com.example.funsdkdemo.R;
 import com.google.zxing.activity.CaptureActivity;
 import com.inuker.bluetooth.library.search.SearchRequest;
@@ -30,25 +33,31 @@ import com.inuker.bluetooth.library.search.SearchResult;
 import com.inuker.bluetooth.library.search.response.SearchResponse;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 import com.janady.AppConstants;
+import com.janady.database.model.Bluetooth;
 import com.janady.lkd.ClientManager;
 import com.janady.view.PullRefreshListView;
 import com.janady.view.PullToRefreshFrameLayout;
 import com.lib.FunSDK;
+import com.lib.MsgContent;
 import com.lib.funsdk.support.FunDevicePassword;
 import com.lib.funsdk.support.FunError;
 import com.lib.funsdk.support.FunSupport;
+import com.lib.funsdk.support.OnAddSubDeviceResultListener;
 import com.lib.funsdk.support.OnFunDeviceListener;
 import com.lib.funsdk.support.OnFunDeviceOptListener;
 import com.lib.funsdk.support.models.FunDevType;
 import com.lib.funsdk.support.models.FunDevice;
 import com.lib.funsdk.support.models.FunLoginType;
 import com.lib.sdk.struct.H264_DVR_FILE_DATA;
+import com.litesuits.orm.db.assit.QueryBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.lib.funsdk.support.models.FunDevType.EE_DEV_BOUTIQUEROTOT;
 
-public class DeviceAddByUser extends ActivityDemo implements OnClickListener, OnFunDeviceListener, OnItemSelectedListener, OnItemClickListener, OnFunDeviceOptListener {
+
+public class DeviceAddByUser extends ActivityDemo implements OnClickListener, OnFunDeviceListener, OnItemSelectedListener, OnItemClickListener, OnFunDeviceOptListener, OnAddSubDeviceResultListener {
 
 	
 	private TextView mTextTitle = null;
@@ -74,14 +83,17 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
 
     private boolean isBleScanning = false;
 
-	private final int MESSAGE_DELAY_FINISH = 0x100;
-	
+    private Bluetooth mBluetooth;
+    private ArrayList<Bluetooth> blists  =MyApplication.liteOrm.query(Bluetooth.class);
+
+	//private final int MESSAGE_DELAY_FINISH = 0x100;
+	private final int MESSAGE_REFRESH_DEVICE_STATUS = 0x100;
 	
 	// 定义当前支持通过序列号登录的设备类型 
 	// 如果是设备类型特定的话,固定一个就可以了
 	private final FunDevType[] mSupportDevTypes = {
-			/*FunDevType.EE_DEV_NORMAL_MONITOR,
-			FunDevType.EE_DEV_INTELLIGENTSOCKET,
+			FunDevType.EE_DEV_NORMAL_MONITOR,
+/*			FunDevType.EE_DEV_INTELLIGENTSOCKET,
 			FunDevType.EE_DEV_SCENELAMP,
 			FunDevType.EE_DEV_LAMPHOLDER,
 			FunDevType.EE_DEV_CARMATE,
@@ -101,8 +113,9 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
 			FunDevType.EE_DEV_UFO,
 			FunDevType.EE_DEV_IDR,
 			FunDevType.EE_DEV_BULLET,
-			FunDevType.EE_DEV_DRUM,*/
+			FunDevType.EE_DEV_DRUM,
 			FunDevType.EE_DEV_CAMERA,
+			FunDevType.EE_DEV_BOUTIQUEROTOT,*/
 			FunDevType.EE_DEV_BLUETOOTH,
 			FunDevType.EE_DEV_REMOTER
 
@@ -114,7 +127,10 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.jdevice_add_by_user);
-		
+
+		mBleDevices = new ArrayList<SearchResult>();
+
+
 		mTextTitle = (TextView)findViewById(R.id.textViewInTopLayout);
         mTextTip = (TextView)findViewById(R.id.textTip);
         mTextTip.setText("搜索设备：");
@@ -165,17 +181,25 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
 
 		mListViewDev = mRefreshLayout.getPullToRefreshListView();
 		mAdapterDev = new ListAdapterSimpleFunDevice(this, mCurrDevType);
+
+		mBluetooth = new Bluetooth();
+
 		mAdapterDev.setOnClickListener(new ListAdapterSimpleFunDevice.OnClickListener() {
 			@Override
 			public void OnClickedBle(SearchResult searchResult) {
-				mEditDevSN.setText(searchResult.getAddress());
-				mEditSceneName.setText(searchResult.getName());
+				mEditDevSN.setText(searchResult.getName());
+				//mEditSceneName.setText(searchResult.getName());
+				mBluetooth.mac = searchResult.getAddress();
+				mBluetooth.isFirst = false;
 			}
 
 			@Override
 			public void OnClickedFun(FunDevice funDevice) {
 				mEditDevSN.setText(funDevice.devSn);
-				mEditSceneName.setText(funDevice.devName);
+				//mEditSceneName.setText();
+				Log.d("DeviceAddByUser", "OnClickedFun: \ndevLoginName:"+funDevice.loginName
+						+"\ndevLoginPsw:"+funDevice.loginPsw
+						+"\nID:"+funDevice.getId());
 			}
 		});
 
@@ -190,21 +214,17 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
 
 		});
 
-		// 以局域网内搜索过的设备,显示在下方作为测试设备添加
-		if ( null != mAdapterDev ) {
-			mAdapterDev.updateDevice(FunSupport.getInstance().getLanDeviceList());
-		}
 
-        mBleDevices = new ArrayList<SearchResult>();
+		searchDevice();
 
 		//mListViewDev.setOnItemClickListener(this);
 		
 		mTextTitle.setText(R.string.guide_module_title_device_add);
 
-        searchDevice();
 
 		// 设置登录方式为互联网方式
-		FunSupport.getInstance().setLoginType(FunLoginType.LOGIN_BY_INTENTT);
+		//FunSupport.getInstance().setLoginType(FunLoginType.LOGIN_BY_INTENTT);
+		FunSupport.getInstance().setLoginType(FunLoginType.LOGIN_BY_LOCAL);
 		
 		// 监听设备类事件
 		FunSupport.getInstance().registerOnFunDeviceListener(this);
@@ -222,12 +242,17 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
 
 	@Override
 	protected void onDestroy() {
-		
+		super.onDestroy();
 		// 注销设备事件监听
 		FunSupport.getInstance().removeOnFunDeviceListener(this);
 		
 		FunSupport.getInstance().removeOnFunDeviceOptListener(this);
-		
+
+
+		// 切换回网络访问
+		FunSupport.getInstance().setLoginType(FunLoginType.LOGIN_BY_INTENTT);
+
+
 		if ( null != mHandler ) {
 			mHandler.removeCallbacksAndMessages(null);
 		}
@@ -254,7 +279,28 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
 			break;
 		case R.id.devAddBtn:
 			{
-				requestDeviceLogin();
+				if(mEditDevSN.getText().equals("") || mEditSceneName.getText().equals("")){
+					alertDialog("序列号或场景名不能为空！", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							return;
+						}
+					}, new DialogInterface.OnCancelListener() {
+						@Override
+						public void onCancel(DialogInterface dialog) {
+							return;
+						}
+					});
+				}
+
+				//requestDeviceLogin();
+				if(mCurrDevType==FunDevType.EE_DEV_BLUETOOTH){
+
+
+				}else{
+
+				}
+
 			}
 			break;
 		case R.id.btnScanCode:
@@ -270,7 +316,11 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
 		@Override
 		public void handleMessage(Message msg) {
 			switch(msg.what) {
-			case MESSAGE_DELAY_FINISH:
+				case MESSAGE_REFRESH_DEVICE_STATUS: {
+					FunSupport.getInstance().requestAllLanDeviceStatus();
+				}
+				break;
+			/*case MESSAGE_DELAY_FINISH:
 				{
 					hideWaitDialog();
 					
@@ -282,7 +332,7 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
 					mFunDevice = null;
 					finish();
 				}
-				break;
+				break;*/
 			}
 		}
 		
@@ -358,12 +408,21 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
 			FunSupport.getInstance().requestDeviceLogin(mFunDevice);
 		}
 	}
-	
+
 	private void requestDeviceAdd() {
 		if ( null != mFunDevice ) {
 			FunSupport.getInstance().requestDeviceAdd(mFunDevice);
 		}
 	}
+
+	private void requestToGetLanDeviceList() {
+		if (!FunSupport.getInstance().requestLanDeviceList()) {
+			showToast(R.string.guide_message_error_call);
+		} else {
+			showWaitDialog();
+		}
+	}
+
 
 	/**
      * 显示输入设备密码对话框
@@ -406,12 +465,15 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
 	@Override
 	public void onDeviceListChanged() {
 		// TODO Auto-generated method stub
-		
+		refreshLanDeviceList();
 	}
 
 	@Override
 	public void onDeviceStatusChanged(FunDevice funDevice) {
 		// TODO Auto-generated method stub
+		if (null != mAdapterDev) {
+			mAdapterDev.notifyDataSetChanged();
+		}
 	}
 
 
@@ -449,12 +511,13 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
 	@Override
 	public void onAPDeviceListChanged() {
 		// TODO Auto-generated method stub
-		
+		refreshLanDeviceList();
 	}
 
 	@Override
 	public void onLanDeviceListChanged() {
 		// TODO Auto-generated method stub
+		refreshLanDeviceList();
 	}
 
 	@Override
@@ -462,6 +525,7 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
 			long arg3) {
 		if ( position >= 0 && position < mSupportDevTypes.length ) {
 			mCurrDevType = mSupportDevTypes[position];
+			mAdapterDev.setCurrentDevType(mCurrDevType);
 		}
 	}
 	
@@ -483,6 +547,7 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
 				mSpinnerDevType.setSelection(getSpinnerIndexByDeviceType(mCurrDevType));
 				// 在EditText中设置当前选择设备的序列号
 				mEditDevSN.setText(mFunDevice.getDevSn());
+				mAdapterDev.setCurrentDevType(mCurrDevType);
 			}
 		}
 		
@@ -588,10 +653,10 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
 	@Override
 	protected void onActivityResult(int requestCode, int responseCode, Intent data) {
 		if ( requestCode == 1 
-				&& responseCode == 1 ) {
+				&& responseCode == RESULT_OK ) {
 			// Demo, 扫描二维码的结果
 			if ( null != data ) {
-				String deviceSn = data.getStringExtra("SN");
+				String deviceSn = data.getStringExtra("result");
 				if ( null != deviceSn && null != mEditDevSN ) {
 					mEditDevSN.setText(deviceSn);
 				}
@@ -607,28 +672,51 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
 		
 	}
 
+	private void refreshLanDeviceList() {
+		hideWaitDialog();
+
+		hideWaitDialog();
+		mAdapterDev.updateDevice(FunSupport.getInstance().getLanDeviceList());
+		mRefreshLayout.showState(AppConstants.LIST);
+
+		// 延时100毫秒更新设备消息
+		mHandler.removeMessages(MESSAGE_REFRESH_DEVICE_STATUS);
+		if (FunSupport.getInstance().getLanDeviceList().size() > 0) {
+			mHandler.sendEmptyMessageDelayed(MESSAGE_REFRESH_DEVICE_STATUS, 100);
+		}
+	}
+
     /**
      * -----------------
-     * 搜索蓝牙设备
+     * 搜索设备
      */
     private void searchDevice() {
-        SearchRequest request = new SearchRequest.Builder()
-                .searchBluetoothLeDevice(5000, 2).build();
+    	if(mCurrDevType==FunDevType.EE_DEV_BLUETOOTH) {
+    		if(mBleDevices.size()>0){mBleDevices.clear();}
+			SearchRequest request = new SearchRequest.Builder()
+					.searchBluetoothLeDevice(5000, 2).build();
 
-        ClientManager.getClient().search(request, mSearchResponse);
-        mRefreshLayout.showState(AppConstants.EMPTY);
+			ClientManager.getClient().search(request, mSearchResponse);
+			mRefreshLayout.showState(AppConstants.EMPTY);
+		}else{
+			//requestToGetLanDeviceList();
+			// 以局域网内搜索过的设备,显示在下方作为测试设备添加
+			if ( null != mAdapterDev && (mCurrDevType == FunDevType.EE_DEV_NORMAL_MONITOR || mCurrDevType == EE_DEV_BOUTIQUEROTOT)) {
+				//mAdapterDev.updateDevice(FunSupport.getInstance().getLanDeviceList());
+				requestToGetLanDeviceList();
+			}
+		}
+
     }
 
     private final SearchResponse mSearchResponse = new SearchResponse() {
         @Override
         public void onSearchStarted() {
-
             mTextTip.setText("停止扫描设备....");
             isBleScanning = true;
             mRefreshLayout.showState(AppConstants.LIST);
             BluetoothLog.w("正在搜索蓝牙设备");
             //toolbar.setTitle(R.string.string_refreshing);
-            mBleDevices.clear();
         }
 
 
@@ -666,4 +754,14 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
             //toolbar.setTitle(R.string.devices);
         }
     };
+
+	@Override
+	public void onAddSubDeviceFailed(FunDevice funDevice, MsgContent msgContent) {
+
+	}
+
+	@Override
+	public void onAddSubDeviceSuccess(FunDevice funDevice, MsgContent msgContent) {
+
+	}
 }

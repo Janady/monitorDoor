@@ -1,5 +1,7 @@
 package com.example.funsdkdemo;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.common.DialogWaitting;
 import com.example.common.UIFactory;
+import com.lib.FunSDK;
 import com.xm.ui.widget.SpinnerSelectItem;
 
 import java.util.Arrays;
@@ -70,6 +73,15 @@ public class ActivityDemo extends FragmentActivity {
 			mToast = Toast.makeText(this, resid, Toast.LENGTH_SHORT);
 			mToast.show();
 		}
+	}
+
+	public void alertDialog(String text, DialogInterface.OnClickListener onClickListener, DialogInterface.OnCancelListener onCancelListener){
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(getString(R.string.app_name));
+		builder.setMessage(text);
+		builder.setPositiveButton("确定", onClickListener);
+		builder.setOnCancelListener(onCancelListener);
+		builder.show();
 	}
 	
 	/**
