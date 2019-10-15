@@ -295,7 +295,19 @@ public class DeviceAddByUser extends ActivityDemo implements OnClickListener, On
 
 				//requestDeviceLogin();
 				if(mCurrDevType==FunDevType.EE_DEV_BLUETOOTH){
-
+					Bluetooth bluetooth = null;
+					mBluetooth.mac = mEditDevSN.getText().toString();
+					mBluetooth.name = mEditSceneName.getText().toString();
+					mBluetooth.password = mEditPassword.getText().toString();
+					List<Bluetooth> bles = MyApplication.liteOrm.query(new QueryBuilder<Bluetooth>(Bluetooth.class).whereEquals(Bluetooth.COL_MAC, mBluetooth.mac));
+					if (bles != null && bles.size() > 0) {
+						bluetooth = bles.get(0);
+						bluetooth.name = mBluetooth.name;
+						bluetooth.password = mBluetooth.password;
+					} else {
+						bluetooth = mBluetooth;
+					}
+					MyApplication.liteOrm.save(bluetooth);
 
 				}else{
 

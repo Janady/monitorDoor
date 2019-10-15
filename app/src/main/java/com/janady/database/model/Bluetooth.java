@@ -4,6 +4,7 @@ import com.litesuits.orm.db.annotation.Column;
 import com.litesuits.orm.db.annotation.Mapping;
 import com.litesuits.orm.db.annotation.PrimaryKey;
 import com.litesuits.orm.db.annotation.Table;
+import com.litesuits.orm.db.annotation.Unique;
 import com.litesuits.orm.db.enums.AssignType;
 import com.litesuits.orm.db.enums.Relation;
 
@@ -14,7 +15,10 @@ public class Bluetooth {
     @PrimaryKey(AssignType.AUTO_INCREMENT)
     @Column("_id") // 指定列名
     private int id;
+    public static final String COL_MAC = "address";
 
+    @Column(COL_MAC) // 指定列名
+    @Unique
     public String mac;
     public String uuid;
     public String serviceUuid;
