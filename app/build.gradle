@@ -86,4 +86,7 @@ dependencies {
     implementation 'com.qmuiteam:qmui:1.4.0'
     implementation 'com.qmuiteam:arch:0.6.0'
     implementation files('libs/lite-orm-1.9.2.jar')
+    // easylink
+    implementation 'io.fogcloud.sdk:easylinkv3:0.2.6'
+    //implementation 'ru.alexbykov:nopermission:1.1.2'
 }
